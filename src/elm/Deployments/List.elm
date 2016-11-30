@@ -107,10 +107,7 @@ deploymentRow aliases editMode autocompleteMode requests deployment =
                 , p [ class "" ] [ text (Date.Format.format "%a, %b %d %I:%M %p" created) ]
                 ]
             , td [ class "bold-text" ]
-                [ a [ href ("https://" ++ (getAliasNameForDeployment deployment aliases)), target "_blank" ]
-                    [ text (getAliasNameForDeployment deployment aliases)
-                    ]
-                ]
+                [ div [ class "flex-single-column"] (List.map (aliasView deployment) (List.filter (\alias -> alias.deploymentId == deployment.uid) aliases)) ]
             , actions aliases deployment editMode autocompleteMode requests
             , td [ class "hidden-md-down", style [ ( "height", "70px" ) ] ] [ loadingSpinner deployment requests ]
             ]
@@ -223,6 +220,17 @@ deploymentState state =
 hasAlias : Deployment -> List Alias -> Bool
 hasAlias deployment aliases =
     List.member deployment.uid (List.map .deploymentId aliases)
+
+
+aliasView : Deployment -> Alias -> Html Msg
+aliasView deployment foundAlias =
+    a
+        [ href ("https://" ++ foundAlias.aliasName)
+        , target "_blank"
+        , class ""
+        ]
+        [ text foundAlias.aliasName
+        ]
 
 
 getAliasNameForDeployment : Deployment -> List Alias -> String
