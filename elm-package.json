@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
-    "summary": "Example using `elm-webpack-loader`.",
-    "repository": "https://github.com/moarwick/elm-webpack-starter.git",
+    "summary": "https://github.com/littleStudent/now_dashboard",
+    "repository": "https://github.com/littleStudent/now_dashboard",
     "license": "MIT",
     "source-directories": [
         "src/elm"

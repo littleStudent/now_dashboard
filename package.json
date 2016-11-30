@@ -6,7 +6,7 @@
   "author": "Thomas Sattlecker",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moarwick/elm-webpack-starter"
+    "url": "https://github.com/littleStudent/now_dashboard"
   },
   "scripts": {
     "server": "webpack-dev-server --hot --inline --content-base src/",
