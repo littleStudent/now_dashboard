@@ -1,0 +1,56 @@
+@import './shared/fonts.scss';
+@import './shared/colors.scss';
+@import './shared/sizes.scss';
+
+#login-container {
+    margin-top: 100px;
+    .h2 {
+        text-align: center;
+        font-weight: 200;
+    }
+
+    input {
+        width: 300px;
+        background-color: $background_color;
+        text-align: center;
+        border-style: solid;
+        border: 0px;
+        border-bottom: 1px solid $contrast_color;
+        color: $primary_color;
+        font-weight: 200;
+        font-size: 20px;
+        flex: 1;
+        padding: 3px 0px 3px 3px;
+        margin: 5px 1px 3px 0px;
+    }
+
+    input:focus, textarea:focus {
+        box-shadow: 0px 0px 0px rgba(6, 169, 40, 0.75);
+        text-decoration: none;
+        outline: none;
+    }
+
+    button {
+        flex: 1;
+        margin-top: 30px;
+        font-size: 18px;
+    }
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    .error-text {
+        color: $primary_color;
+        font-size: 13px;
+        font-weight: 100;
+        margin-top: 30px;
+    }
+
+}
+
+#faq-container {
+    margin-top: 40px;
+    // text-align: center;
+}

@@ -1,0 +1,74 @@
+// ##navigation
+
+@import './shared/fonts.scss';
+@import './shared/colors.scss';
+@import './shared/sizes.scss';
+
+.navigation-bar {
+    font-family: $navigation_font_family;
+    font-size: $navigation_font_size;
+    font-weight: 200;
+    height: 60px;
+    background-image: linear-gradient(to right, transparent 33%, rgba(255,255,255,0) 0%);
+    background-position: bottom;
+    background-size: 20px 1px;
+    background-repeat: repeat-x;
+
+    // display: flex;
+    padding: 10px;
+
+    .container {
+        display: flex;
+    }
+
+    .navigation-header {
+        @media screen and (max-width: $break-large) {
+            padding-right: 10px;
+        }
+        @media screen and (min-width: $break-large) {
+            padding-right: 50px;
+        }
+        display: inline-block        
+    }
+
+    .selected-item {
+        border-style: solid;
+        border: 0px;
+        border-bottom: 1px solid $contrast_color;
+        color: $primary_color;        
+    }
+
+    .navigation-item {
+        margin-top: 15px;
+        margin-left: 10px;
+        margin-right: 10px;
+        @media screen and (max-width: $break-large) {
+            font-size: $navigation_font_size_responsive;
+        }
+        @media screen and (min-width: $break-large) {
+            font-size: $navigation_font_size;
+        }
+    }
+    a:hover {
+        p {
+            text-decoration: none;
+            border-style: solid;
+            border: 0px;
+            border-bottom: 1px solid $contrast_color;
+        }
+        cursor: pointer;
+    }
+
+    .navigation-title {
+        margin-top: 10px;
+        font-weight: 300;
+        font-size: $navigation_font_size;
+    }
+
+    a {
+        color: $primary_color;
+        text-decoration: none;
+        line-height: 24px;
+    }
+
+}

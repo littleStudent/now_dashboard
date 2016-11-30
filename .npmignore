@@ -1,0 +1,8 @@
+node_modules
+src
+elm-stuff
+.gitignore
+Dockerfile
+elm-package.json
+README.md
+webpack.config.js

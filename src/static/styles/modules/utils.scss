@@ -1,0 +1,42 @@
+.margin-bottom-0 {
+    margin-bottom: 0px;
+}
+
+.small-text {
+    font-size: $base_font_size_small;
+    color: $primary_color_bold;
+}
+
+.flex-single-column {
+    display: flex;
+    flex-direction: column;
+    button {
+        text-align: left;
+    }
+}
+
+.flex-single-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.info-text {
+    color: $secondary_color;
+}
+
+.bold-text {
+    font-weight: bold;
+    color: $primary_color_bold;
+}
+
+.primary-color {
+    color: $primary_color;
+}
+
+.red {
+    color: $contrast_color;
+}
+
+.blue {
+    color: $blue_color;
+}

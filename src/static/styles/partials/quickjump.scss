@@ -1,0 +1,22 @@
+@import './shared/fonts.scss';
+@import './shared/colors.scss';
+@import './shared/sizes.scss';
+
+#quickjump {
+    @media (min-width: 992px) {
+        position: fixed;
+    }
+    span:hover {
+        text-decoration: none;
+        border-style: solid;
+        border: 0px;
+        border-bottom: 1px solid $contrast_color;        
+        cursor: pointer;
+    }
+    font-size: $base_font_size_small;
+    line-height: 14px;
+
+    li {
+        margin-top: 10px;
+    }
+}

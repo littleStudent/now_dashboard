@@ -1,0 +1,44 @@
+{
+  "name": "nash",
+  "description": "Dashboard for Now",
+  "version": "0.0.1",
+  "license": "MIT",
+  "author": "Thomas Sattlecker",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/moarwick/elm-webpack-starter"
+  },
+  "scripts": {
+    "server": "webpack-dev-server --hot --inline --content-base src/",
+    "build": "rimraf dist && elm package install && webpack",
+    "watch": "webpack --watch",
+    "postinstall": "npm run build",
+    "start": "http-server dist --cors"
+  },
+  "devDependencies": {
+    "autoprefixer": "^6.3.6",
+    "bootstrap": "^4.0.0-alpha.4",
+    "copy-webpack-plugin": "^3.0.1",
+    "css-loader": "^0.23.1",
+    "elm": "^0.18.0",
+    "elm-hot-loader": "^0.4.0",
+    "elm-webpack-loader": "^3.0.6",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.9.0",
+    "html-webpack-plugin": "^2.17.0",
+    "jquery": "^3.1.0",
+    "node-sass": "^3.7.0",
+    "postcss-loader": "^0.10.1",
+    "rimraf": "^2.5.2",
+    "sass-loader": "^4.0.0",
+    "http-server": "^0.9.0",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1",
+    "webpack-merge": "^0.17.0"
+  },
+  "dependencies": {
+    "tether": "^1.3.7"
+  }
+}
