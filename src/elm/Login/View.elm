@@ -53,7 +53,7 @@ view model =
                     , a [ href "https://github.com/littleStudent/now_dashbaord" ] [ text " frontend" ]
                     , a [ href "https://github.com/littleStudent/now_dashboard_backend" ] [ text " backend" ]
                     ]
-                , li [] [ text "your zeit API token is nerver stored" ]
+                , li [] [ text "your zeit API token is never stored" ]
                 , li [] [ text "since the zeit API does not support CORS at the moment, all traffic is running through microservices deployed to now" ]
                 ]
             ]

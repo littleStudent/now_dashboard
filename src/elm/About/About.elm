@@ -11,5 +11,5 @@ type AboutMsg
 view : Html a
 view =
     div
-        [ class "h1" ]
-        [ text ("Hello, Elm") ]
+        [ class "" ]
+        [ text ("") ]

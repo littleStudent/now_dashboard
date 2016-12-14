@@ -25,7 +25,14 @@ nav : Routing.Route -> Bool -> Html Msg
 nav route isLoggedIn =
     div [ class "navigation-bar" ]
         [ div [ class "container" ]
-            [ a [ class "navigation-header", href "#/" ] [ h5 [ class "navigation-title" ] [ text ("Nash") ] ]
+            [ a [ class "navigation-header", href "#/" ]
+                [ h5 [ class "navigation-title" ]
+                    [ span [] [
+                        img [src ""] []
+                    ]
+                    , text ("Nash")
+                    ]
+                ]
             , if isLoggedIn then
                 a [ href "#/deployments" ]
                     [ p
