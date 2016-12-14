@@ -3,12 +3,12 @@ module Deployments.Types exposing (..)
 import Aliases.Types exposing (Alias)
 import Deployments.Autocomplete
 import Dict
-import Autocomplete
 
 
 type alias Model =
     { deployments : List Deployment
     , aliases : List Alias
+    , selectedAliasName : String
     , token : String
     , editMode : Dict.Dict String EditMode
     , autocompleteMode : Dict.Dict String Deployments.Autocomplete.Model
@@ -32,6 +32,7 @@ initialModel : Model
 initialModel =
     { deployments = []
     , aliases = []
+    , selectedAliasName = ""
     , token = ""
     , autocompleteMode = Dict.empty
     , editMode = Dict.empty

@@ -29,7 +29,7 @@ view model =
 
 quickjumpNavigation : Model -> Html Msg
 quickjumpNavigation model =
-    div [ class "col-lg-2 hidden-md-down", id "quickjump" ]
+    div [ class "col-lg-3 hidden-md-down", id "quickjump" ]
         [ ul []
             (List.map
                 (\deployments ->
@@ -43,7 +43,7 @@ quickjumpNavigation model =
 
                             Just val ->
                                 li []
-                                    [ span [ onClick (Navigate_To_Element val.name) ] [ text ("# " ++ val.name) ]
+                                    [ span [ onClick (Select_Alias val.name) ] [ text ("# " ++ val.name) ]
                                     ]
                 )
                 (groupDeploymentList model.deployments)
@@ -55,8 +55,8 @@ quickjumpNavigation model =
 deploymentSection : Model -> Html Msg
 deploymentSection model =
     div [ class "row" ]
-        [ div [ class "deployment-content offset-lg-2 offset-md-0 col-lg-9 col-md-12" ]
-            (List.map (deploymentTable model) (groupDeploymentList model.deployments))
+        [ div [ class "deployment-content offset-lg-3 offset-md-0 col-lg-8 col-md-12" ]
+            (List.map (deploymentTable model) (filterDeploymentList model.selectedAliasName model.deployments))
         ]
 
 
@@ -107,7 +107,7 @@ deploymentRow aliases editMode autocompleteMode requests deployment =
                 , p [ class "" ] [ text (Date.Format.format "%a, %b %d %I:%M %p" created) ]
                 ]
             , td [ class "bold-text" ]
-                [ div [ class "flex-single-column"] (List.map (aliasView deployment) (List.filter (\alias -> alias.deploymentId == deployment.uid) aliases)) ]
+                [ div [ class "flex-single-column" ] (List.map (aliasView deployment) (List.filter (\alias -> alias.deploymentId == deployment.uid) aliases)) ]
             , actions aliases deployment editMode autocompleteMode requests
             , td [ class "hidden-md-down", style [ ( "height", "70px" ) ] ] [ loadingSpinner deployment requests ]
             ]
@@ -250,3 +250,24 @@ getAliasNameForDeployment deployment aliases =
 groupDeploymentList : List Deployment -> List (List Deployment)
 groupDeploymentList deployments =
     (List.Extra.groupWhile (\x y -> x.name == y.name) deployments)
+
+
+filterDeploymentList : String -> List Deployment -> List (List Deployment)
+filterDeploymentList selectedAlias groupedDeployments =
+    List.filter
+        (\deployments ->
+            let
+                deployment =
+                    List.head deployments
+            in
+                case deployment of
+                    Nothing ->
+                        False
+
+                    Just val ->
+                        if val.name == selectedAlias then
+                            True
+                        else
+                            False
+        )
+        (groupDeploymentList groupedDeployments)

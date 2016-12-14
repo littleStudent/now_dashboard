@@ -19,14 +19,14 @@ update msg model =
     case msg of
         DeploymentsMsg subMsg ->
             let
+                deployments =
+                    model.deployments
+
                 ( updatedDeployments, cmd ) =
                     Deployments.State.update subMsg
-                        { deployments = model.deployments.deployments
-                        , token = model.login.token
-                        , aliases = model.aliases
-                        , editMode = model.deployments.editMode
-                        , requests = model.deployments.requests
-                        , autocompleteMode = model.deployments.autocompleteMode
+                        { deployments
+                            | token = model.login.token
+                            , aliases = model.aliases
                         }
             in
                 ( { model | deployments = updatedDeployments, aliases = updatedDeployments.aliases }, Cmd.map DeploymentsMsg cmd )

@@ -1,0 +1,17 @@
+{
+  "name": "now-dashboard-api-deployment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "micro -p 3000",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Thomas Sattlecker",
+  "license": "ISC",
+  "dependencies": {
+    "micro": "^6.0.2",
+    "micro-match": "^0.1.2",
+    "now-client": "^0.5.0"
+  }
+}

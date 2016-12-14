@@ -1,6 +1,5 @@
 module Deployments.State exposing (..)
 
-import Task exposing (Task, succeed, fail, andThen, mapError)
 import Deployments.Messages exposing (..)
 import Deployments.Types exposing (Deployment, DeploymentState, Model, SetAliasResponse, DeploymentRequest)
 import Deployments.Autocomplete
@@ -9,8 +8,6 @@ import Deployments.Rest exposing (fetchDeployments, fetchDeployment, deleteDeplo
 import Array
 import Dict
 import List
-import Ports exposing (..)
-import Autocomplete
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -187,8 +184,8 @@ update msg model =
                     Just val ->
                         ( { model | editMode = Dict.insert deploymentId { val | aliasName = aliasName } model.editMode }, Cmd.none )
 
-        Navigate_To_Element elementId ->
-            ( model, scrollTo elementId )
+        Select_Alias aliasName ->
+            ( { model | selectedAliasName = aliasName }, Cmd.none )
 
         Ping_Deployment_Response deployment (Ok _) ->
             ( { model

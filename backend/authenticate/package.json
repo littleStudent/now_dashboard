@@ -1,0 +1,18 @@
+{
+    "name": "now-dashboard-api-authentication",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "micro -p 3000",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Thomas Sattlecker",
+    "license": "ISC",
+    "dependencies": {
+        "es6-request": "^2.1.2",
+        "micro": "^6.0.2",
+        "micro-match": "^0.1.2",
+        "request": "^2.75.0"
+    }
+}

@@ -19,5 +19,5 @@ type Msg
     | Start_Editing_Deployment DeploymentId
     | End_Editing_Deployment DeploymentId
     | Input_New_Alias_Name DeploymentId String
-    | Navigate_To_Element String
     | AutocompleteMsg Deployments.Autocomplete.Model Deployment Deployments.Autocomplete.Msg
+    | Select_Alias String

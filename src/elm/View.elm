@@ -6,6 +6,7 @@ import Html.Events exposing (onClick)
 import Messages exposing (Msg(..))
 import Types exposing (Model)
 import Deployments.List
+import Deployments.Types exposing (Deployment)
 import Aliases.List
 import Secrets.List
 import About.About
@@ -27,9 +28,9 @@ nav route isLoggedIn =
         [ div [ class "container" ]
             [ a [ class "navigation-header", href "#/" ]
                 [ h5 [ class "navigation-title" ]
-                    [ span [] [
-                        img [src ""] []
-                    ]
+                    [ span []
+                        [ img [ src "" ] []
+                        ]
                     , text ("Nash")
                     ]
                 ]
@@ -91,16 +92,18 @@ page : Model -> Html Msg
 page model =
     case Debug.log "page" model.route of
         DeploymentsRoute ->
-            Html.map DeploymentsMsg
-                (Deployments.List.view
-                    { deployments = (List.sortWith deploymentCompare model.deployments.deployments)
-                    , aliases = model.aliases
-                    , token = model.login.token
-                    , editMode = model.deployments.editMode
-                    , requests = model.deployments.requests
-                    , autocompleteMode = model.deployments.autocompleteMode
-                    }
-                )
+            let
+                deployments =
+                    model.deployments
+            in
+                Html.map DeploymentsMsg
+                    (Deployments.List.view
+                        { deployments
+                            | deployments = (List.sortWith deploymentCompare model.deployments.deployments)
+                            , aliases = model.aliases
+                            , token = model.login.token
+                        }
+                    )
 
         AliasesRoute ->
             Html.map AliasesMsg (Aliases.List.view model.aliases)
@@ -125,6 +128,7 @@ notFoundView =
         ]
 
 
+deploymentCompare : Deployment -> Deployment -> Basics.Order
 deploymentCompare a b =
     case compare a.name b.name of
         EQ ->
