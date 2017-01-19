@@ -13,12 +13,12 @@
     "build": "rimraf dist && elm package install && webpack",
     "watch": "webpack --watch",
     "postinstall": "npm run build",
-    "start": "http-server dist --cors"
+    "start": "serve dist/ -s -p 8080"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.6",
     "bootstrap": "^4.0.0-alpha.4",
-    "copy-webpack-plugin": "^3.0.1",
+    "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.23.1",
     "elm": "^0.18.0",
     "elm-hot-loader": "^0.4.0",
@@ -36,9 +36,10 @@
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1",
-    "webpack-merge": "^0.17.0"
+    "webpack-merge": "^1.0.0"
   },
   "dependencies": {
+    "serve": "^2.0.0",
     "tether": "^1.3.7"
   }
 }

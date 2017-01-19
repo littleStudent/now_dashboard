@@ -8,6 +8,7 @@ import Deployments.Rest exposing (fetchDeployments, fetchDeployment, deleteDeplo
 import Array
 import Dict
 import List
+import Navigation
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -22,9 +23,9 @@ update msg model =
         Fetch_Deployments_Response (Ok receiveDeployments) ->
             ( { model
                 | deployments = receiveDeployments
-                , requests = (Dict.fromList (List.map (updateInProgress model.requests) (List.map .uid receiveDeployments)))
+                , requests = (Dict.fromList (List.map (updateInProgress model.requests) (List.map .uid (List.filter (\deployment -> deployment.name == model.selectedAliasName) receiveDeployments))))
               }
-            , Cmd.batch (List.map (fetchDeployment model.token) receiveDeployments)
+            , Cmd.batch (List.map (fetchDeployment model.token) (List.filter (\deployment -> deployment.name == model.selectedAliasName) receiveDeployments))
             )
 
         Fetch_Deployments_Response (Err _) ->
@@ -185,7 +186,9 @@ update msg model =
                         ( { model | editMode = Dict.insert deploymentId { val | aliasName = aliasName } model.editMode }, Cmd.none )
 
         Select_Alias aliasName ->
-            ( { model | selectedAliasName = aliasName }, Cmd.none )
+            ( { model | selectedAliasName = aliasName }
+            , Navigation.newUrl ("/deployments/" ++ aliasName)
+            )
 
         Ping_Deployment_Response deployment (Ok _) ->
             ( { model

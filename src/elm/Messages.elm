@@ -16,5 +16,7 @@ type Msg
     | LoginMsg Login.Messages.Msg
     | LogoutMsg
     | GoTo (Maybe Routing.Route)
+    | ShowDeployments
+    | ShowAliases
     | Start_Load_Token
     | Load_Token String

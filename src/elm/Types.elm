@@ -18,9 +18,19 @@ type alias Model =
 
 initialModel : Routing.Route -> Model
 initialModel route =
-    { deployments = Deployments.Types.initialModel
-    , aliases = []
-    , secrets = []
-    , route = route
-    , login = { token = "", isLoggedIn = False, errorMessage = "" }
-    }
+    case route of
+        Routing.DeploymentsRoute aliasName ->
+            { deployments = Deployments.Types.initialModel aliasName
+            , aliases = []
+            , secrets = []
+            , route = route
+            , login = { token = "", isLoggedIn = False, errorMessage = "" }
+            }
+
+        _ ->
+            { deployments = Deployments.Types.initialModel ""
+            , aliases = []
+            , secrets = []
+            , route = route
+            , login = { token = "", isLoggedIn = False, errorMessage = "" }
+            }

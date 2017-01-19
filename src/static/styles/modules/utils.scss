@@ -40,3 +40,10 @@
 .blue {
     color: $blue_color;
 }
+
+.selected-item {
+    border-style: solid;
+    border: 0px;
+    border-bottom: 1px solid $contrast_color;
+    color: $primary_color;        
+}

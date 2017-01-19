@@ -30,7 +30,7 @@ update msg model =
 
         Login_Response (Ok newToken) ->
             ( { model | isLoggedIn = True, token = newToken }
-            , Cmd.batch [ Navigation.newUrl "/#/deployments", setToken newToken ]
+            , Cmd.batch [ Navigation.newUrl "/deployments", setToken newToken ]
             )
 
         Login_Response (Err _) ->
