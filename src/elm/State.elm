@@ -112,7 +112,9 @@ update msg model =
         GoTo route ->
             case route of
                 Nothing ->
-                    ( { model | route = Routing.DeploymentsRoute "" }, Cmd.none )
+                    ( { model | route = Routing.DeploymentsRoute "" }
+                    , Cmd.map DeploymentsMsg (fetchDeployments model.login.token)
+                    )
 
                 Just route ->
                     case route of
@@ -125,4 +127,4 @@ update msg model =
                             ( { model | route = route }, Cmd.none )
 
                         _ ->
-                            ( { model | route = Routing.DeploymentsRoute "" }, Cmd.none )
+                            ( { model | route = route }, Cmd.none )
