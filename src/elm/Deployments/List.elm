@@ -21,7 +21,7 @@ import Color
 
 view : Model -> Html Msg
 view model =
-    div [ class "content-container" ]
+    div [ class "content-container row " ]
         [ quickjumpNavigation model
         , deploymentSection model
         ]
@@ -29,8 +29,9 @@ view model =
 
 quickjumpNavigation : Model -> Html Msg
 quickjumpNavigation model =
-    div [ class "col-lg-3 hidden-md-down", id "quickjump" ]
-        [ ul []
+    div [ class "hidden-md-down col-lg-3", id "quickjump" ]
+        [ button [ style [ ( "font-weight", "bold" ) ], onClick Fetch_Deployments_Request ] [ text "## refresh" ]
+        , ul [ class "" ]
             (List.map
                 (\deployments ->
                     let
@@ -42,22 +43,26 @@ quickjumpNavigation model =
                                 text "nothing"
 
                             Just val ->
-                                li []
-                                    [ span [ onClick (Select_Alias val.name) ] [ text ("# " ++ val.name) ]
+                                li [ onClick (Select_Alias val.name) ]
+                                    [ span
+                                        [ (if val.name == model.selectedAliasName then
+                                            class "selected-item"
+                                           else
+                                            class ""
+                                          )
+                                        ]
+                                        [ text ("# " ++ val.name) ]
                                     ]
                 )
                 (groupDeploymentList model.deployments)
             )
-        , button [ style [ ( "font-weight", "bold" ) ], onClick Fetch_Deployments_Request ] [ text "## refresh" ]
         ]
 
 
 deploymentSection : Model -> Html Msg
 deploymentSection model =
-    div [ class "row" ]
-        [ div [ class "deployment-content offset-lg-3 offset-md-0 col-lg-8 col-md-12" ]
-            (List.map (deploymentTable model) (filterDeploymentList model.selectedAliasName model.deployments))
-        ]
+    div [ class "deployment-content offset-lg-3 offset-md-0 col-lg-8 col-md-12" ]
+        (List.map (deploymentTable model) (filterDeploymentList model.selectedAliasName model.deployments))
 
 
 deploymentTable : Model -> List Deployment -> Html Msg
@@ -103,7 +108,7 @@ deploymentRow aliases editMode autocompleteMode requests deployment =
                 , p [ class "deployment-uid" ] [ text (deployment.uid) ]
                 ]
             , td []
-                [ p [ class "margin-bottom-0", deploymentState (Maybe.withDefault "loading..." deployment.state) ] [ text (Maybe.withDefault "loading..." deployment.state) ]
+                [ p [ class "margin-bottom-0", deploymentState (Maybe.withDefault "not loaded" deployment.state) ] [ text (Maybe.withDefault "not loaded" deployment.state) ]
                 , p [ class "" ] [ text (Date.Format.format "%a, %b %d %I:%M %p" created) ]
                 ]
             , td [ class "bold-text" ]
@@ -145,7 +150,7 @@ actions : List Alias -> Deployment -> Dict.Dict String EditMode -> Dict.Dict Str
 actions aliases deployment editMode autocompleteMode requests =
     td [ class "flex-single-column" ]
         [ deleteBtn deployment aliases
-        , if (Maybe.withDefault "loading..." deployment.state) == "FROZEN" then
+        , if (Maybe.withDefault "not loaded" deployment.state) == "FROZEN" then
             pingBtn deployment
           else
             text ""
@@ -211,7 +216,7 @@ deploymentState state =
         style [ ( "color", "#006eff" ) ]
     else if state == "READY" then
         style [ ( "color", "green" ) ]
-    else if state == "loading..." then
+    else if state == "not loaded" then
         style [ ( "color", "darkgray" ) ]
     else
         style [ ( "color", "red" ) ]

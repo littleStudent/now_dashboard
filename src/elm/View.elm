@@ -26,7 +26,7 @@ nav : Routing.Route -> Bool -> Html Msg
 nav route isLoggedIn =
     div [ class "navigation-bar" ]
         [ div [ class "container" ]
-            [ a [ class "navigation-header", href "#/" ]
+            [ a [ class "navigation-header", href "/" ]
                 [ h5 [ class "navigation-title" ]
                     [ span []
                         [ img [ src "" ] []
@@ -35,13 +35,15 @@ nav route isLoggedIn =
                     ]
                 ]
             , if isLoggedIn then
-                a [ href "#/deployments" ]
+                a [ onClick ShowDeployments ]
                     [ p
                         [ class
-                            (if route == DeploymentsRoute then
-                                "selected-item navigation-item"
-                             else
-                                "navigation-item"
+                            (case route of
+                                DeploymentsRoute aliasName ->
+                                    "selected-item navigation-item"
+
+                                _ ->
+                                    "navigation-item"
                             )
                         ]
                         [ text "Deployments" ]
@@ -49,7 +51,7 @@ nav route isLoggedIn =
               else
                 text ""
             , if isLoggedIn then
-                a [ href "#/aliases" ]
+                a [ onClick ShowAliases ]
                     [ p
                         [ class
                             (if route == AliasesRoute then
@@ -63,7 +65,7 @@ nav route isLoggedIn =
               else
                 text ""
             , if isLoggedIn then
-                a [ href "#/secrets" ]
+                a [ href "/secrets" ]
                     [ p
                         [ class
                             (if route == SecretsRoute then
@@ -90,8 +92,8 @@ nav route isLoggedIn =
 
 page : Model -> Html Msg
 page model =
-    case Debug.log "page" model.route of
-        DeploymentsRoute ->
+    case model.route of
+        DeploymentsRoute aliasName ->
             let
                 deployments =
                     model.deployments
@@ -117,7 +119,7 @@ page model =
         LoginRoute ->
             Html.map LoginMsg (Login.View.view model.login)
 
-        NotFoundRoute ->
+        _ ->
             notFoundView
 
 

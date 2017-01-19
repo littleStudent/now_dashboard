@@ -3,11 +3,10 @@
 @import './shared/sizes.scss';
 
 .deployment-content {
-    margin-top:20px;
+    margin-top: 50px;        
 }
 
 .deployments-section {
-    margin-top: 30px;
     .deployments-section-title {
         font-size: $base_font_size;
         text-align: left;

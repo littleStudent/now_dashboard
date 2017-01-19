@@ -69,7 +69,7 @@ update msg model =
                         }
                   }
                 , Cmd.batch
-                    [ Navigation.newUrl "/#/login"
+                    [ Navigation.newUrl "/login"
                     , setToken ""
                     ]
                 )
@@ -79,7 +79,7 @@ update msg model =
 
         Load_Token token ->
             if String.isEmpty token then
-                ( model, Navigation.newUrl "/#/login" )
+                ( model, Navigation.newUrl "/login" )
             else
                 let
                     newLogin =
@@ -96,14 +96,33 @@ update msg model =
                     , Cmd.batch
                         [ Cmd.map DeploymentsMsg (fetchDeployments token)
                         , Cmd.map AliasesMsg (fetchAliases token)
-                        , Navigation.newUrl "/#/deployments"
                         ]
                     )
+
+        ShowDeployments ->
+            ( { model | route = Routing.DeploymentsRoute model.deployments.selectedAliasName }
+            , Cmd.batch
+                [ Navigation.newUrl ("/deployments/" ++ model.deployments.selectedAliasName)
+                ]
+            )
+
+        ShowAliases ->
+            ( { model | route = Routing.AliasesRoute }, Navigation.newUrl "/aliases" )
 
         GoTo route ->
             case route of
                 Nothing ->
-                    ( { model | route = Routing.DeploymentsRoute }, Cmd.none )
+                    ( { model | route = Routing.DeploymentsRoute "" }, Cmd.none )
 
                 Just route ->
-                    ( { model | route = route }, Cmd.map DeploymentsMsg (fetchDeployments model.login.token) )
+                    case route of
+                        Routing.DeploymentsRoute aliasName ->
+                            ( { model | route = route }
+                            , Cmd.map DeploymentsMsg (fetchDeployments model.login.token)
+                            )
+
+                        Routing.AliasesRoute ->
+                            ( { model | route = route }, Cmd.none )
+
+                        _ ->
+                            ( { model | route = Routing.DeploymentsRoute "" }, Cmd.none )

@@ -28,11 +28,11 @@ type alias DeploymentRequest =
     }
 
 
-initialModel : Model
-initialModel =
+initialModel : String -> Model
+initialModel aliasName =
     { deployments = []
     , aliases = []
-    , selectedAliasName = ""
+    , selectedAliasName = aliasName
     , token = ""
     , autocompleteMode = Dict.empty
     , editMode = Dict.empty
