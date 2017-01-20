@@ -12,7 +12,7 @@ RUN npm run build
 
 
 # Tell Docker we are going to use this port
-EXPOSE 9000 8080
+EXPOSE 8080
 
 # The command to run our app when the container is run
 CMD ["npm", "start"]

@@ -1,5 +1,9 @@
 $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import '~bootstrap/scss/_mixins.scss';
+@import '~bootstrap/scss/_variables.scss';
+@import '~bootstrap/scss/_grid.scss';
+@import '~bootstrap/scss/_tables.scss';
+@import '~bootstrap/scss/_normalize.scss';
 @import '~bootstrap/scss/bootstrap.scss';
 
 @import './shared/fonts.scss';
@@ -47,6 +51,7 @@ button {
     color: $primary_color;
     outline: none;
     text-rendering: geometricPrecision;
+    font-family: $base_font_family;
 }
 
 button:focus {
