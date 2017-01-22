@@ -18,5 +18,6 @@ type Msg
     | GoTo (Maybe Routing.Route)
     | ShowDeployments
     | ShowAliases
+    | ShowSecrets
     | Start_Load_Token
     | Load_Token String

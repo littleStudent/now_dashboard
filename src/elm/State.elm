@@ -5,6 +5,7 @@ import Types exposing (Model)
 import Deployments.State
 import Aliases.Rest exposing (fetchAliases)
 import Deployments.Rest exposing (fetchDeployments)
+import Secrets.Rest exposing (fetchSecrets)
 import Aliases.State
 import Secrets.State exposing (update)
 import Login.View
@@ -96,6 +97,7 @@ update msg model =
                     , Cmd.batch
                         [ Cmd.map DeploymentsMsg (fetchDeployments token)
                         , Cmd.map AliasesMsg (fetchAliases token)
+                        , Cmd.map SecretsMsg (fetchSecrets token)
                         ]
                     )
 
@@ -108,6 +110,9 @@ update msg model =
 
         ShowAliases ->
             ( { model | route = Routing.AliasesRoute }, Navigation.newUrl "/aliases" )
+
+        ShowSecrets ->
+            ( { model | route = Routing.SecretsRoute }, Navigation.newUrl "/secrets" )
 
         GoTo route ->
             case route of

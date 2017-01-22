@@ -65,7 +65,7 @@ nav route isLoggedIn =
               else
                 text ""
             , if isLoggedIn then
-                a [ href "/secrets" ]
+                a [ onClick ShowSecrets ]
                     [ p
                         [ class
                             (if route == SecretsRoute then

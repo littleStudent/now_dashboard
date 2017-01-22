@@ -11,7 +11,7 @@ var outputPath = path.join(__dirname, 'dist');
 console.log('WEBPACK GO!');
 
 // determine build env
-var TARGET_ENV = process.env.npm_lifecycle_event === 'build2' ? 'production' : 'development';
+var TARGET_ENV = process.env.npm_lifecycle_event === 'build_locally' ? 'production' : 'development';
 var outputFilename = TARGET_ENV === 'production' ? '[name]-[hash].js' : '[name].js'
 
 // common webpack config
