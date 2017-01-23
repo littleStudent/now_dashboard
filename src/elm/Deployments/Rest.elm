@@ -37,10 +37,10 @@ fetchDeployment token deployment =
 
 setAliasForDeployment : String -> String -> String -> Cmd Msg
 setAliasForDeployment token aliasName deploymentId =
-    HttpBuilder.post ("https://api.zeit.co/now/deployments/" ++ deploymentId ++ "/aliases")
+    HttpBuilder.post ("https://now.deployments.aliases.autcoding.com/" ++ deploymentId)
         |> withJsonBody (Encode.object [ ( "alias", Encode.string aliasName ) ])
         |> withHeader "Accept" "application/json"
-        |> withHeader "Authorization" ("Bearer " ++ token)
+        |> withHeader "Authorization" token
         |> withExpect (Http.expectJson setAliasResponseDecoder)
         |> HttpBuilder.send (Set_Alias_Response deploymentId)
 
