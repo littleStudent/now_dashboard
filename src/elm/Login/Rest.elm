@@ -11,9 +11,9 @@ import Login.Messages exposing (..)
 
 authenticate : String -> Cmd Msg
 authenticate token =
-    HttpBuilder.get "https://now.authentication.autcoding.com"
+    HttpBuilder.get "https://api.zeit.co/now/aliases"
         |> withHeader "Accept" "application/json"
-        |> withHeader "Authorization" ("" ++ token)
+        |> withHeader "Authorization" ("Bearer " ++ token)
         |> withExpect (Http.expectJson deploymentToken)
         |> HttpBuilder.send Login_Response
 

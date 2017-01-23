@@ -12,15 +12,20 @@ import Aliases.Types exposing (Alias)
 
 fetchAliases : String -> Cmd Msg
 fetchAliases token =
-    HttpBuilder.get "https://now.aliases.autcoding.com"
+    HttpBuilder.get "https://api.zeit.co/now/aliases"
         |> withHeader "Accept" "application/json"
-        |> withHeader "Authorization" token
-        |> withExpect (Http.expectJson aliasDecoder)
+        |> withHeader "Authorization" ("Bearer " ++ token)
+        |> withExpect (Http.expectJson aliasesDecoder)
         |> HttpBuilder.send Fetch_Aliases_Response
 
 
 
 -- DECODERS
+
+
+aliasesDecoder : Decode.Decoder (List Alias)
+aliasesDecoder =
+    Decode.field "aliases" aliasDecoder
 
 
 aliasDecoder : Decode.Decoder (List Alias)

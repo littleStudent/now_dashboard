@@ -12,10 +12,10 @@ import Secrets.Types exposing (Secret)
 
 fetchSecrets : String -> Cmd Msg
 fetchSecrets token =
-    HttpBuilder.get "https://now.secrets.autcoding.com"
+    HttpBuilder.get "https://api.zeit.co/now/secrets"
         |> withHeader "Accept" "application/json"
-        |> withHeader "Authorization" token
-        |> withExpect (Http.expectJson aliasDecoder)
+        |> withHeader "Authorization" ("Bearer " ++ token)
+        |> withExpect (Http.expectJson secretsDecoder)
         |> HttpBuilder.send Fetch_Secrets_Response
 
 
@@ -23,8 +23,13 @@ fetchSecrets token =
 -- DECODERS
 
 
-aliasDecoder : Decode.Decoder (List Secret)
-aliasDecoder =
+secretsDecoder : Decode.Decoder (List Secret)
+secretsDecoder =
+    Decode.field "secrets" secretDecoder
+
+
+secretDecoder : Decode.Decoder (List Secret)
+secretDecoder =
     Decode.list memberDecoder
 
 

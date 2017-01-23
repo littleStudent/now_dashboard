@@ -19,37 +19,37 @@ pingDeployments deployment =
 
 fetchDeployments : String -> Cmd Msg
 fetchDeployments token =
-    HttpBuilder.get "https://now.deployments.autcoding.com"
+    HttpBuilder.get "https://api.zeit.co/now/deployments"
         |> withHeader "Accept" "application/json"
-        |> withHeader "Authorization" token
-        |> withExpect (Http.expectJson deploymentDecoder)
+        |> withHeader "Authorization" ("Bearer " ++ token)
+        |> withExpect (Http.expectJson deploymentsDecoder)
         |> HttpBuilder.send Fetch_Deployments_Response
 
 
 fetchDeployment : String -> Deployment -> Cmd Msg
 fetchDeployment token deployment =
-    HttpBuilder.get ("https://now.deployment.autcoding.com/" ++ deployment.uid)
+    HttpBuilder.get ("https://api.zeit.co/now/deployments/" ++ deployment.uid)
         |> withHeader "Accept" "application/json"
-        |> withHeader "Authorization" token
+        |> withHeader "Authorization" ("Bearer " ++ token)
         |> withExpect (Http.expectJson memberDecoder2)
         |> HttpBuilder.send (Fetch_Deployment_Response deployment)
 
 
 setAliasForDeployment : String -> String -> String -> Cmd Msg
 setAliasForDeployment token aliasName deploymentId =
-    HttpBuilder.post ("https://now.deployments.aliases.autcoding.com/" ++ deploymentId)
+    HttpBuilder.post ("https://api.zeit.co/now/deployments/" ++ deploymentId ++ "/aliases")
         |> withJsonBody (Encode.object [ ( "alias", Encode.string aliasName ) ])
         |> withHeader "Accept" "application/json"
-        |> withHeader "Authorization" token
+        |> withHeader "Authorization" ("Bearer " ++ token)
         |> withExpect (Http.expectJson setAliasResponseDecoder)
         |> HttpBuilder.send (Set_Alias_Response deploymentId)
 
 
 deleteDeployment : String -> String -> Cmd Msg
 deleteDeployment token deploymentId =
-    HttpBuilder.delete ("https://now.deployment.autcoding.com/" ++ deploymentId)
+    HttpBuilder.delete ("https://api.zeit.co/now/deployments/" ++ deploymentId)
         |> withHeader "Accept" "application/json"
-        |> withHeader "Authorization" token
+        |> withHeader "Authorization" ("Bearer " ++ token)
         |> withHeader "Access-Control-Allow-Headers" "Access-Control-Allow-Methods"
         |> withHeader "Access-Control-Allow-Methods" "DELETE"
         |> withExpect (Http.expectJson memberDecoder2)
@@ -58,6 +58,11 @@ deleteDeployment token deploymentId =
 
 
 -- DECODERS
+
+
+deploymentsDecoder : Decode.Decoder (List Deployment)
+deploymentsDecoder =
+    Decode.field "deployments" deploymentDecoder
 
 
 deploymentDecoder : Decode.Decoder (List Deployment)
