@@ -109,10 +109,20 @@ update msg model =
             )
 
         ShowAliases ->
-            ( { model | route = Routing.AliasesRoute }, Navigation.newUrl "/aliases" )
+            ( { model | route = Routing.AliasesRoute }
+            , Cmd.batch
+                [ Navigation.newUrl "/aliases"
+                , Cmd.map AliasesMsg (fetchAliases model.login.token)
+                ]
+            )
 
         ShowSecrets ->
-            ( { model | route = Routing.SecretsRoute }, Navigation.newUrl "/secrets" )
+            ( { model | route = Routing.SecretsRoute }
+            , Cmd.batch
+                [ Navigation.newUrl "/secrets"
+                , Cmd.map SecretsMsg (fetchSecrets model.login.token)
+                ]
+            )
 
         GoTo route ->
             case route of

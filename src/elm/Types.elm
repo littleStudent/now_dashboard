@@ -24,7 +24,12 @@ initialModel route =
             , aliases = []
             , secrets = []
             , route = route
-            , login = { token = "", isLoggedIn = False, errorMessage = "" }
+            , login =
+                { token = ""
+                , isLoggedIn = False
+                , errorMessage = ""
+                , inProgress = False
+                }
             }
 
         _ ->
@@ -32,5 +37,10 @@ initialModel route =
             , aliases = []
             , secrets = []
             , route = route
-            , login = { token = "", isLoggedIn = False, errorMessage = "" }
+            , login =
+                { token = ""
+                , isLoggedIn = False
+                , errorMessage = ""
+                , inProgress = False
+                }
             }

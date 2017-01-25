@@ -24,25 +24,39 @@ update msg model =
             )
 
         Login_Request ->
-            ( model
+            ( { model | inProgress = True }
             , authenticate model.token
             )
 
-        Login_Response (Ok newToken) ->
-            ( { model | isLoggedIn = True, token = newToken }
+        Login_Response newToken (Ok _) ->
+            ( { model
+                | isLoggedIn = True
+                , token = newToken
+                , inProgress = False
+              }
             , Cmd.batch [ Navigation.newUrl "/deployments", setToken newToken ]
             )
 
-        Login_Response (Err _) ->
-            ( { model | errorMessage = "provided token is not authorized" }, Cmd.none )
+        Login_Response newToken (Err err) ->
+            let
+                _ =
+                    Debug.log "error" err
+            in
+                ( { model
+                    | errorMessage = "provided token is not authorized"
+                    , inProgress = False
+                  }
+                , Cmd.none
+                )
 
 
 view : Model -> Html Msg
 view model =
     div [ class "container content-container", id "login-container" ]
         [ input [ class "", type_ "password", placeholder "Enter your now token", onInput Set_Token ] []
-        , div [] [ text "get your token ", a [ href "https://zeit.co/account#api-tokens" ] [ text "here" ] ]
+        , div [] [ text "get your token ", a [ href "https://zeit.co/account#api-tokens", target "_blank" ] [ text "here" ] ]
         , loginButton (String.isEmpty model.token)
+        , spinner model.inProgress
         , errorMessage model.errorMessage
         , div [ id "faq-container" ]
             [ p [ style [ ( "font-weight", "bold" ) ] ] [ text "## Description" ]
@@ -51,10 +65,18 @@ view model =
                 , li []
                     [ text "source code is available on github"
                     , a [ href "https://github.com/littleStudent/now_dashbaord" ] [ text " frontend" ]
-                    , a [ href "https://github.com/littleStudent/now_dashboard_backend" ] [ text " backend" ]
                     ]
                 , li [] [ text "your zeit API token is never stored" ]
-                , li [] [ text "since the zeit API does not support CORS at the moment, all traffic is running through microservices deployed to now" ]
+                ]
+            , p [ style [ ( "font-weight", "bold" ) ] ] [ text "## Features" ]
+            , ul [ style [ ( "list-style-type", "circle" ) ] ]
+                [ li [] [ text "list deployments" ]
+                , li [] [ text "delete deployments" ]
+                , li [] [ text "ping deployments to wake them up" ]
+                , li [] [ text "show the aliases for the deployments" ]
+                , li [] [ text "set new aliases with autocompletion" ]
+                , li [] [ text "list aliases" ]
+                , li [] [ text "list secrets" ]
                 ]
             ]
         ]
@@ -74,3 +96,17 @@ errorMessage errorMessage =
         text ""
     else
         div [ class "error-text" ] [ text errorMessage ]
+
+
+spinner : Bool -> Html Msg
+spinner isShown =
+    if isShown then
+        div [ class "sk-wave" ]
+            [ div [ class "sk-rect sk-rect1" ] []
+            , div [ class "sk-rect sk-rect2" ] []
+            , div [ class "sk-rect sk-rect3" ] []
+            , div [ class "sk-rect sk-rect4" ] []
+            , div [ class "sk-rect sk-rect5" ] []
+            ]
+    else
+        text ""

@@ -37,10 +37,10 @@ fetchDeployment token deployment =
 
 setAliasForDeployment : String -> String -> String -> Cmd Msg
 setAliasForDeployment token aliasName deploymentId =
-    HttpBuilder.post ("https://now.deployments.aliases.autcoding.com/" ++ deploymentId)
+    HttpBuilder.post ("https://api.zeit.co/now/deployments/" ++ deploymentId ++ "/aliases")
         |> withJsonBody (Encode.object [ ( "alias", Encode.string aliasName ) ])
         |> withHeader "Accept" "application/json"
-        |> withHeader "Authorization" token
+        |> withHeader "Authorization" ("Bearer " ++ token)
         |> withExpect (Http.expectJson setAliasResponseDecoder)
         |> HttpBuilder.send (Set_Alias_Response deploymentId)
 
@@ -50,8 +50,6 @@ deleteDeployment token deploymentId =
     HttpBuilder.delete ("https://api.zeit.co/now/deployments/" ++ deploymentId)
         |> withHeader "Accept" "application/json"
         |> withHeader "Authorization" ("Bearer " ++ token)
-        |> withHeader "Access-Control-Allow-Headers" "Access-Control-Allow-Methods"
-        |> withHeader "Access-Control-Allow-Methods" "DELETE"
         |> withExpect (Http.expectJson memberDecoder2)
         |> HttpBuilder.send (Delete_Deployment_Response deploymentId)
 
