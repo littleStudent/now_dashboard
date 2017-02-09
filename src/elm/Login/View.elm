@@ -64,7 +64,7 @@ view model =
                 [ li [] [ text "this is a dashboard in which you get a good overview of your deployments" ]
                 , li []
                     [ text "source code is available on github"
-                    , a [ href "https://github.com/littleStudent/now_dashbaord" ] [ text " frontend" ]
+                    , a [ href "https://github.com/littleStudent/now_dashboard" ] [ text " frontend" ]
                     ]
                 , li [] [ text "your zeit API token is never stored" ]
                 ]
