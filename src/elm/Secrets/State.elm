@@ -1,16 +1,28 @@
 module Secrets.State exposing (..)
 
 import Secrets.Messages exposing (..)
-import Secrets.Types exposing (Secret)
+import Secrets.Types exposing (Model)
+import Secrets.Rest exposing (..)
 
 
-update : Msg -> List Secret -> ( List Secret, Cmd Msg )
-update msg secrets =
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
     case msg of
         Fetch_Secrets_Response (Ok secrets) ->
-            ( List.sortBy .name secrets
+            ( { model | secrets = List.sortBy .name secrets }
             , Cmd.none
             )
 
         Fetch_Secrets_Response (Err _) ->
-            ( secrets, Cmd.none )
+            ( model, Cmd.none )
+
+        Delete_Secret_Response (Ok _) ->
+            ( model
+            , Cmd.none
+            )
+
+        Delete_Secret_Response (Err _) ->
+            ( model, Cmd.none )
+
+        Delete_Secret_Request secretId ->
+            ( model, Cmd.none )

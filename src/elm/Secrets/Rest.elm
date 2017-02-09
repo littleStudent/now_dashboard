@@ -19,6 +19,15 @@ fetchSecrets token =
         |> HttpBuilder.send Fetch_Secrets_Response
 
 
+deleteSecret : String -> String -> Cmd Msg
+deleteSecret token secretId =
+    HttpBuilder.get ("https://api.zeit.co/now/secrets/" ++ secretId)
+        |> withHeader "Accept" "application/json"
+        |> withHeader "Authorization" ("Bearer " ++ token)
+        |> withExpect (Http.expectJson uuidDecoder)
+        |> HttpBuilder.send Delete_Secret_Response
+
+
 
 -- DECODERS
 
@@ -39,3 +48,8 @@ memberDecoder =
         (Decode.field "uid" Decode.string)
         (Decode.field "name" Decode.string)
         (Decode.field "created" Decode.string)
+
+
+uuidDecoder : Decode.Decoder String
+uuidDecoder =
+    Decode.field "uid" Decode.string
