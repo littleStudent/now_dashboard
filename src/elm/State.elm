@@ -5,6 +5,8 @@ import Types exposing (Model)
 import Deployments.State
 import Aliases.Rest exposing (fetchAliases)
 import Deployments.Rest exposing (fetchDeployments)
+import Deployments.Messages
+import Aliases.Messages
 import Secrets.Rest exposing (fetchSecrets)
 import Aliases.State
 import Secrets.State exposing (update)
@@ -30,7 +32,15 @@ update msg model =
                             , aliases = model.aliases
                         }
             in
-                ( { model | deployments = updatedDeployments, aliases = updatedDeployments.aliases }, Cmd.map DeploymentsMsg cmd )
+                if (subMsg == Deployments.Messages.Fetch_Deployments_Request) then
+                    ( { model | deployments = updatedDeployments, aliases = updatedDeployments.aliases }
+                    , Cmd.batch
+                        [ Cmd.map DeploymentsMsg cmd
+                        , Cmd.map AliasesMsg (fetchAliases model.login.token)
+                        ]
+                    )
+                else
+                    ( { model | deployments = updatedDeployments, aliases = updatedDeployments.aliases }, Cmd.map DeploymentsMsg cmd )
 
         AliasesMsg subMsg ->
             let
