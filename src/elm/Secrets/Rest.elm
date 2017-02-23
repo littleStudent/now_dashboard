@@ -39,7 +39,7 @@ postSecret token name value =
         |> withHeader "Accept" "application/json"
         |> withHeader "Authorization" ("Bearer " ++ token)
         |> withExpect (Http.expectJson uuidDecoder)
-        |> HttpBuilder.send Post_Secret_Response
+        |> HttpBuilder.send (Post_Secret_Response name)
 
 
 

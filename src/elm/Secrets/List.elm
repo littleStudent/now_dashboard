@@ -41,13 +41,20 @@ list model =
                     ]
                 ]
             , tbody []
-                (List.map (secretRow model.requests) model.secrets)
+                (List.append
+                    (List.map (secretRow model.requests) model.secrets)
+                    [ tr []
+                        [ td [] [ input [ class "", placeholder "secret name", onInput Input_Secret_Name ] [] ]
+                        , td [] [ input [ class "", placeholder "secret value", onInput Input_Secret_Value ] [] ]
+                        , td []
+                            [ button
+                                [ class "", onClick (Post_Secret_Request model.newSecretName model.newSecretValue) ]
+                                [ text "Add" ]
+                            ]
+                        ]
+                    ]
+                )
             ]
-        , input [ class "", placeholder "secret name", onInput Input_Secret_Name ] []
-        , input [ class "", placeholder "secret value", onInput Input_Secret_Value ] []
-        , button
-            [ class "", onClick (Post_Secret_Request model.newSecretName model.newSecretValue) ]
-            [ text "Send" ]
         ]
 
 
@@ -87,7 +94,7 @@ loadingSpinner secret requests =
                 text ""
 
             Just val ->
-                if val.inProgressCount > 0 then
+                if val.inProgressCount > -1 then
                     spinner
                 else
                     text ""

@@ -19,7 +19,7 @@ update msg model =
             ( { model
                 | secrets =
                     List.sortBy .name secrets
-                    -- , requests = (Dict.fromList (List.map (updateInProgress model.requests) (List.map .uid secrets)))
+                , requests = (Dict.fromList (List.map (decreaseInProgress model.requests) (List.map .uid secrets)))
               }
             , Cmd.none
             )
@@ -66,15 +66,20 @@ update msg model =
             , postSecret model.token name value
             )
 
-        Post_Secret_Response (Ok secretId) ->
-            ( { model
-                | secrets = { uid = secretId, name = "", created = "" } :: model.secrets
-                , requests = (Dict.fromList (List.map (updateInProgress model.requests) (List.map .uid model.secrets)))
-              }
-            , fetchSecrets model.token
-            )
+        Post_Secret_Response name (Ok secretId) ->
+            let
+                requests =
+                    Dict.insert secretId { inProgressCount = 0 } model.requests
+            in
+                ( { model
+                    | secrets =
+                        { uid = secretId, name = name, created = "2021-01-21T13:09:33.000Z" } :: model.secrets
+                    , requests = (Dict.fromList (List.map (updateInProgress requests) (List.map .uid model.secrets)))
+                  }
+                , fetchSecrets model.token
+                )
 
-        Post_Secret_Response _ ->
+        Post_Secret_Response name _ ->
             ( model
             , Cmd.none
             )
@@ -93,6 +98,11 @@ update msg model =
 updateInProgress : Dict.Dict String SecretRequest -> String -> ( String, SecretRequest )
 updateInProgress requests deploymentId =
     ( deploymentId, { inProgressCount = incrementProgressCount deploymentId requests } )
+
+
+decreaseInProgress : Dict.Dict String SecretRequest -> String -> ( String, SecretRequest )
+decreaseInProgress requests deploymentId =
+    ( deploymentId, { inProgressCount = decrementProgressCount deploymentId requests } )
 
 
 incrementProgressCount : String -> Dict.Dict String SecretRequest -> Int
