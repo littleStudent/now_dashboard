@@ -7,7 +7,7 @@
 .navigation-bar {
     font-family: $navigation_font_family;
     font-size: $navigation_font_size;
-    font-weight: 200;
+    font-weight: 300;
     height: 60px;
     background-image: linear-gradient(to right, transparent 33%, rgba(255,255,255,0) 0%);
     background-position: bottom;
@@ -15,7 +15,7 @@
     background-repeat: repeat-x;
 
     // display: flex;
-    padding: 10px;
+    // padding: 10px;
 
     .container {
         display: flex;
@@ -54,8 +54,9 @@
     }
 
     .navigation-title {
-        margin-top: 10px;
+        margin-top: 16px;
         font-weight: 300;
+        color: $primary_color_bold;
         font-size: $navigation_font_size;
     }
 

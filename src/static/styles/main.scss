@@ -29,7 +29,7 @@ body {
     @media screen and (min-width: $break-large) {
         font-size: $base_font_size;
     }
-    font-weight: 100;
+    font-weight: normal;
     background-color: $background_color;
     color: $primary_color;
 }
