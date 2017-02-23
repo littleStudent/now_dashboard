@@ -51,8 +51,11 @@ update msg model =
 
         SecretsMsg subMsg ->
             let
+                secrets =
+                    model.secrets
+
                 ( updatedSecrets, cmd ) =
-                    Secrets.State.update subMsg model.secrets
+                    Secrets.State.update subMsg { secrets | token = model.login.token }
             in
                 ( { model | secrets = updatedSecrets }, Cmd.map SecretsMsg cmd )
 

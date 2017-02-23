@@ -10,7 +10,7 @@ import Routing
 type alias Model =
     { deployments : Deployments.Types.Model
     , aliases : List Alias
-    , secrets : List Secret
+    , secrets : Secrets.Types.Model
     , route : Routing.Route
     , login : Login.Types.Model
     }
@@ -22,7 +22,7 @@ initialModel route =
         Routing.DeploymentsRoute aliasName ->
             { deployments = Deployments.Types.initialModel aliasName
             , aliases = []
-            , secrets = []
+            , secrets = Secrets.Types.initialModel
             , route = route
             , login =
                 { token = ""
@@ -35,7 +35,7 @@ initialModel route =
         _ ->
             { deployments = Deployments.Types.initialModel ""
             , aliases = []
-            , secrets = []
+            , secrets = Secrets.Types.initialModel
             , route = route
             , login =
                 { token = ""

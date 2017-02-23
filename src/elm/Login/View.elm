@@ -4,7 +4,6 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import String
-import HttpBuilder exposing (..)
 import Navigation
 import Login.Rest exposing (authenticate)
 import Login.Types exposing (..)
