@@ -141,7 +141,10 @@ update msg model =
             case route of
                 Nothing ->
                     ( { model | route = Routing.DeploymentsRoute "" }
-                    , Cmd.map DeploymentsMsg (fetchDeployments model.login.token)
+                    , Cmd.batch
+                        [ Cmd.map DeploymentsMsg (fetchDeployments model.login.token)
+                        , Cmd.map AliasesMsg (fetchAliases model.login.token)
+                        ]
                     )
 
                 Just route ->
