@@ -39,4 +39,8 @@ memberDecoder =
         (Decode.field "uid" Decode.string)
         (Decode.field "alias" Decode.string)
         (Decode.field "created" Decode.string)
-        (Decode.field "deploymentId" Decode.string)
+        (Decode.oneOf
+            [ (Decode.field "deploymentId" Decode.string)
+            , (Decode.succeed "")
+            ]
+        )

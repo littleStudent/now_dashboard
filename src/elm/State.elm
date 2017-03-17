@@ -144,6 +144,7 @@ update msg model =
                     , Cmd.batch
                         [ Cmd.map DeploymentsMsg (fetchDeployments model.login.token)
                         , Cmd.map AliasesMsg (fetchAliases model.login.token)
+                        , trackPage "/deployments"
                         ]
                     )
 
@@ -151,11 +152,14 @@ update msg model =
                     case route of
                         Routing.DeploymentsRoute aliasName ->
                             ( { model | route = route }
-                            , Cmd.map DeploymentsMsg (fetchDeployments model.login.token)
+                            , Cmd.batch
+                                [ Cmd.map DeploymentsMsg (fetchDeployments model.login.token)
+                                , trackPage "/deployments"
+                                ]
                             )
 
                         Routing.AliasesRoute ->
-                            ( { model | route = route }, Cmd.none )
+                            ( { model | route = route }, trackPage "/aliases" )
 
                         _ ->
                             ( { model | route = route }, Cmd.none )

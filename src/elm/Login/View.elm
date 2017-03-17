@@ -53,7 +53,7 @@ view : Model -> Html Msg
 view model =
     div [ class "container content-container", id "login-container" ]
         [ input [ class "", type_ "password", placeholder "Enter your now token", onInput Set_Token ] []
-        , div [] [ text "get your token ", a [ href "https://zeit.co/account#api-tokens", target "_blank" ] [ text "here" ] ]
+        , div [] [ text "get your token ", a [ href "https://zeit.co/account/tokens", target "_blank" ] [ text "here" ] ]
         , loginButton (String.isEmpty model.token)
         , spinner model.inProgress
         , errorMessage model.errorMessage
