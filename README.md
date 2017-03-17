@@ -17,5 +17,6 @@ The dashboard is a simple frontend application written in elm.
 
 # Deployment
 
-1. run `npm run build_locally`
-2. run `now --npm` for the frontend
+```
+run `npm run deploy`
+```
