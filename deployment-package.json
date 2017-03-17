@@ -1,0 +1,17 @@
+{
+  "name": "nash",
+  "description": "Dashboard for Now",
+  "version": "0.0.1",
+  "license": "MIT",
+  "author": "Thomas Sattlecker",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/littleStudent/now_dashboard"
+  },
+  "scripts": {
+    "start": "serve --single"
+  },
+  "dependencies": {
+    "serve": "5.0.3"
+  }
+}

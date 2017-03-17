@@ -12,8 +12,7 @@
     "server": "webpack-dev-server --hot --inline --content-base src/",
     "build_locally": "rimraf dist && elm package install && webpack",
     "watch": "webpack --watch",
-    "deploy": "npm run build_locally && now --npm --public --alias",
-    "start": "serve dist/ -p 8080 --single"
+    "deploy": "npm run build_locally && now dist/ --public"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.6",
@@ -38,7 +37,6 @@
     "webpack-merge": "^1.0.0"
   },
   "dependencies": {
-    "serve": "2.4.0",
     "tether": "^1.3.7",
     "elm": "^0.18.0"
   }
