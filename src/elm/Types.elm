@@ -1,7 +1,7 @@
 module Types exposing (..)
 
 import Deployments.Types
-import Aliases.Types exposing (Alias)
+import Aliases.Types
 import Secrets.Types exposing (Secret)
 import Login.Types
 import Routing
@@ -9,7 +9,7 @@ import Routing
 
 type alias Model =
     { deployments : Deployments.Types.Model
-    , aliases : List Alias
+    , aliases : Aliases.Types.Model
     , secrets : Secrets.Types.Model
     , route : Routing.Route
     , login : Login.Types.Model
@@ -21,7 +21,7 @@ initialModel route =
     case route of
         Routing.DeploymentsRoute aliasName ->
             { deployments = Deployments.Types.initialModel aliasName
-            , aliases = []
+            , aliases = Aliases.Types.initialModel
             , secrets = Secrets.Types.initialModel
             , route = route
             , login =
@@ -34,7 +34,7 @@ initialModel route =
 
         _ ->
             { deployments = Deployments.Types.initialModel ""
-            , aliases = []
+            , aliases = Aliases.Types.initialModel
             , secrets = Secrets.Types.initialModel
             , route = route
             , login =

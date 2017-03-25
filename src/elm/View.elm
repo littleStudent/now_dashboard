@@ -102,7 +102,7 @@ page model =
                     (Deployments.List.view
                         { deployments
                             | deployments = (List.sortWith deploymentCompare model.deployments.deployments)
-                            , aliases = model.aliases
+                            , aliases = model.aliases.aliases
                             , token = model.login.token
                         }
                     )
