@@ -6,7 +6,6 @@ import Deployments.State
 import Aliases.Rest exposing (fetchAliases)
 import Deployments.Rest exposing (fetchDeployments)
 import Deployments.Messages
-import Aliases.Messages
 import Secrets.Rest exposing (fetchSecrets)
 import Aliases.State
 import Secrets.State exposing (update)
@@ -29,18 +28,18 @@ update msg model =
                     Deployments.State.update subMsg
                         { deployments
                             | token = model.login.token
-                            , aliases = model.aliases
+                            , aliases = model.aliases.aliases
                         }
             in
                 if (subMsg == Deployments.Messages.Fetch_Deployments_Request) then
-                    ( { model | deployments = updatedDeployments, aliases = updatedDeployments.aliases }
+                    ( { model | deployments = updatedDeployments }
                     , Cmd.batch
                         [ Cmd.map DeploymentsMsg cmd
                         , Cmd.map AliasesMsg (fetchAliases model.login.token)
                         ]
                     )
                 else
-                    ( { model | deployments = updatedDeployments, aliases = updatedDeployments.aliases }, Cmd.map DeploymentsMsg cmd )
+                    ( { model | deployments = updatedDeployments }, Cmd.map DeploymentsMsg cmd )
 
         AliasesMsg subMsg ->
             let
@@ -98,6 +97,9 @@ update msg model =
                 let
                     newLogin =
                         model.login
+
+                    newAliases =
+                        model.aliases
                 in
                     ( { model
                         | login =
@@ -106,6 +108,7 @@ update msg model =
                                 , token = token
                                 , errorMessage = ""
                             }
+                        , aliases = { newAliases | token = token }
                       }
                     , Cmd.batch
                         [ Cmd.map DeploymentsMsg (fetchDeployments token)

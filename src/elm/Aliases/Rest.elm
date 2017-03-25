@@ -19,6 +19,15 @@ fetchAliases token =
         |> HttpBuilder.send Fetch_Aliases_Response
 
 
+deleteAlias : String -> String -> Cmd Msg
+deleteAlias token aliasId =
+    HttpBuilder.delete ("https://api.zeit.co/now/aliases/" ++ aliasId)
+        |> withHeader "Accept" "application/json"
+        |> withHeader "Authorization" ("Bearer " ++ token)
+        |> withExpect (Http.expectJson deleteAliasResponseDecoder)
+        |> HttpBuilder.send (Delete_Alias_Response aliasId)
+
+
 
 -- DECODERS
 
@@ -44,3 +53,8 @@ memberDecoder =
             , (Decode.succeed "")
             ]
         )
+
+
+deleteAliasResponseDecoder : Decode.Decoder String
+deleteAliasResponseDecoder =
+    (Decode.field "status" Decode.string)
