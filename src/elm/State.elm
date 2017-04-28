@@ -63,10 +63,27 @@ update msg model =
 
         LoginMsg subMsg ->
             let
+                secrets =
+                    model.secrets
+
+                deployments =
+                    model.deployments
+
+                aliases =
+                    model.aliases
+
                 ( updatedLogin, cmd ) =
                     Login.View.update subMsg model.login
             in
-                ( { model | login = updatedLogin }, Cmd.map LoginMsg cmd )
+                ( { model
+                    | login =
+                        updatedLogin
+                    , secrets = { secrets | token = updatedLogin.token }
+                    , deployments = { deployments | token = updatedLogin.token }
+                    , aliases = { aliases | token = updatedLogin.token }
+                  }
+                , Cmd.map LoginMsg cmd
+                )
 
         LogoutMsg ->
             let

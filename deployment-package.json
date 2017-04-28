@@ -11,6 +11,9 @@
   "scripts": {
     "start": "serve --single"
   },
+  "now": {
+    "public": true
+  },
   "dependencies": {
     "serve": "5.0.3"
   }
