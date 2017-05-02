@@ -26,6 +26,11 @@
     .deployment-uid {
         font-size: $base_font_size_small_secondary;
         color: $secondary_color;
+        margin-bottom: 0;
+    }
+    .deployment-logs {
+        color: $secondary_color;
+        margin-bottom: 0;
     }
     a:hover {
         cursor: pointer;
