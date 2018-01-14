@@ -1,19 +1,19 @@
 module Deployments.List exposing (..)
 
+import Aliases.Types exposing (Alias)
+import Color
+import Date exposing (fromTime)
+import Date.Format
+import Deployments.Autocomplete
+import Deployments.Messages exposing (Msg(..))
+import Deployments.Types exposing (Deployment, DeploymentRequest, EditMode, Model)
+import Dict
+import FontAwesome
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
-import Deployments.Messages exposing (Msg(..))
-import Deployments.Types exposing (Deployment, Model, EditMode, DeploymentRequest)
-import Deployments.Autocomplete
-import Aliases.Types exposing (Alias)
-import Date exposing (fromTime)
-import Date.Format
 import List.Extra
 import String
-import Dict
-import FontAwesome
-import Color
 
 
 -- hello component
@@ -38,21 +38,20 @@ quickjumpNavigation model =
                         deployment =
                             List.head deployments
                     in
-                        case deployment of
-                            Nothing ->
-                                text "nothing"
+                    case deployment of
+                        Nothing ->
+                            text "nothing"
 
-                            Just val ->
-                                li [ onClick (Select_Alias val.name) ]
-                                    [ span
-                                        [ (if val.name == model.selectedAliasName then
-                                            class "selected-item"
-                                           else
-                                            class ""
-                                          )
-                                        ]
-                                        [ text ("# " ++ val.name) ]
+                        Just val ->
+                            li [ onClick (Select_Alias val.name) ]
+                                [ span
+                                    [ if val.name == model.selectedAliasName then
+                                        class "selected-item"
+                                      else
+                                        class ""
                                     ]
+                                    [ text ("# " ++ val.name) ]
+                                ]
                 )
                 (groupDeploymentList model.deployments)
             )
@@ -71,55 +70,68 @@ deploymentTable model deployments =
         deployment =
             List.head deployments
     in
-        case deployment of
-            Nothing ->
-                text "nothing"
+    case deployment of
+        Nothing ->
+            text "nothing"
 
-            Just val ->
-                div [ class "deployments-section" ]
-                    [ p [ class "deployments-section-title bold-text", id val.name ] [ text ("## " ++ val.name) ]
-                    , table [ class "table", style [ ( "table-layout", "fixed" ) ] ]
-                        [ thead []
-                            [ tr []
-                                [ th [] [ text "name" ]
-                                , th [] [ text "state" ]
-                                , th [ class "" ] [ text "alias" ]
-                                , th [] [ text "actions" ]
-                                , th [ class "hidden-md-down" ] [ text "" ]
-                                ]
+        Just val ->
+            div [ class "deployments-section" ]
+                [ p [ class "deployments-section-title bold-text", id val.name ] [ text ("## " ++ val.name) ]
+                , table [ class "table", style [ ( "table-layout", "fixed" ) ] ]
+                    [ thead []
+                        [ tr []
+                            [ th [] [ text "name" ]
+                            , th [] [ text "state" ]
+                            , th [ class "" ] [ text "alias" ]
+                            , th [] [ text "actions" ]
+                            , th [ class "hidden-md-down" ] [ text "" ]
                             ]
-                        , tbody [] (List.map (deploymentRow model.aliases model.editMode model.autocompleteMode model.requests) deployments)
                         ]
+                    , tbody [] (List.map (deploymentRow model.aliases model.editMode model.autocompleteMode model.requests) deployments)
                     ]
+                ]
 
 
 deploymentRow : List Alias -> Dict.Dict String EditMode -> Dict.Dict String Deployments.Autocomplete.Model -> Dict.Dict String DeploymentRequest -> Deployment -> Html Msg
 deploymentRow aliases editMode autocompleteMode requests deployment =
     let
         created =
-            fromTime (Result.withDefault 0 (String.toFloat deployment.created))
+            fromTime (toFloat deployment.created)
     in
-        tr []
-            [ td []
-                [ p [ class "deployment-name" ]
-                    [ a [ href ("https://" ++ deployment.url), target "_blank" ]
-                        [ text (deployment.name ++ "  "), FontAwesome.external_link_square Color.darkGray 12 ]
-                    ]
-                , p [ class "deployment-logs" ]
-                    [ a [ href ("https://" ++ deployment.url ++ "/_logs"), target "_blank" ]
-                        [ text "logs  ", FontAwesome.external_link_square Color.darkGray 12 ]
-                    ]
-                , p [ class "deployment-uid" ] [ text (deployment.uid) ]
+    tr []
+        [ td []
+            [ p [ class "deployment-name" ]
+                [ a [ href ("https://" ++ deployment.url), target "_blank" ]
+                    [ text (deployment.name ++ "  "), FontAwesome.external_link_square Color.darkGray 12 ]
                 ]
-            , td []
-                [ p [ class "margin-bottom-0", deploymentState (Maybe.withDefault "not loaded" deployment.state) ] [ text (Maybe.withDefault "not loaded" deployment.state) ]
-                , p [ class "" ] [ text (Date.Format.format "%a, %b %d %I:%M %p" created) ]
+            , p [ class "deployment-logs" ]
+                [ a [ href ("https://" ++ deployment.url ++ "/_logs"), target "_blank" ]
+                    [ text "logs  ", FontAwesome.external_link_square Color.darkGray 12 ]
                 ]
-            , td [ class "bold-text" ]
-                [ div [ class "flex-single-column" ] (List.map (aliasView deployment) (List.filter (\alias -> alias.deploymentId == deployment.uid) aliases)) ]
-            , actions aliases deployment editMode autocompleteMode requests
-            , td [ class "hidden-md-down", style [ ( "height", "70px" ) ] ] [ loadingSpinner deployment requests ]
+            , p [ class "deployment-uid" ] [ text deployment.uid ]
             ]
+        , td []
+            [ p [ class "margin-bottom-0", deploymentState (Maybe.withDefault "not loaded" deployment.state) ] [ text (Maybe.withDefault "not loaded" deployment.state) ]
+            , p [ class "margin-bottom-0" ]
+                [ let
+                    currentInstances =
+                        Maybe.withDefault 0
+                            (deployment.scale
+                                |> Maybe.andThen .current
+                            )
+                  in
+                  if currentInstances == 1 then
+                    text (toString currentInstances ++ " Instance running")
+                  else
+                    text (toString currentInstances ++ " Instances running")
+                ]
+            , p [ class "deployment-date" ] [ text (Date.Format.format "%a, %b %d %I:%M %p" created) ]
+            ]
+        , td [ class "bold-text" ]
+            [ div [ class "flex-single-column" ] (List.map (aliasView deployment) (List.filter (\alias -> alias.deploymentId == deployment.uid) aliases)) ]
+        , actions aliases deployment editMode autocompleteMode requests
+        , td [ class "hidden-md-down", style [ ( "height", "70px" ) ] ] [ loadingSpinner deployment requests ]
+        ]
 
 
 loadingSpinner : Deployment -> Dict.Dict String DeploymentRequest -> Html Msg
@@ -128,15 +140,15 @@ loadingSpinner deployment requests =
         request =
             Dict.get deployment.uid requests
     in
-        case request of
-            Nothing ->
-                text ""
+    case request of
+        Nothing ->
+            text ""
 
-            Just val ->
-                if val.inProgressCount > 0 then
-                    spinner
-                else
-                    text ""
+        Just val ->
+            if val.inProgressCount > 0 then
+                spinner
+            else
+                text ""
 
 
 spinner : Html Msg
@@ -154,7 +166,7 @@ actions : List Alias -> Deployment -> Dict.Dict String EditMode -> Dict.Dict Str
 actions aliases deployment editMode autocompleteMode requests =
     td [ class "flex-single-column" ]
         [ deleteBtn deployment aliases
-        , if (Maybe.withDefault "not loaded" deployment.state) == "FROZEN" then
+        , if Maybe.withDefault "not loaded" deployment.state == "FROZEN" then
             pingBtn deployment
           else
             text ""
@@ -169,23 +181,23 @@ setAliasBtn : Deployment -> Dict.Dict String Deployments.Autocomplete.Model -> H
 setAliasBtn deployment autocompleteMode =
     let
         mode =
-            (Dict.get deployment.uid autocompleteMode)
+            Dict.get deployment.uid autocompleteMode
     in
-        case mode of
-            Nothing ->
-                text ""
+    case mode of
+        Nothing ->
+            text ""
 
-            Just val ->
-                span [ class "flex-single-column" ]
-                    [ Html.map (AutocompleteMsg val deployment)
-                        (Deployments.Autocomplete.view
-                            (Dict.get deployment.uid autocompleteMode)
-                        )
-                    , span [ class "flex-single-row" ]
-                        [ button [ class "alias-btn", onClick (End_Editing_Deployment deployment.uid) ] [ text "cancel" ]
-                        , button [ class "alias-btn", onClick (Set_Alias_Request deployment.uid) ] [ text "add" ]
-                        ]
+        Just val ->
+            span [ class "flex-single-column" ]
+                [ Html.map (AutocompleteMsg val deployment)
+                    (Deployments.Autocomplete.view
+                        (Dict.get deployment.uid autocompleteMode)
+                    )
+                , span [ class "flex-single-row" ]
+                    [ button [ class "alias-btn", onClick (End_Editing_Deployment deployment.uid) ] [ text "cancel" ]
+                    , button [ class "alias-btn", onClick (Set_Alias_Request deployment.uid) ] [ text "add" ]
                     ]
+                ]
 
 
 pingBtn : Deployment -> Html Msg
@@ -248,17 +260,17 @@ getAliasNameForDeployment deployment aliases =
         foundAlias =
             List.Extra.find (\alias -> alias.deploymentId == deployment.uid) aliases
     in
-        case foundAlias of
-            Nothing ->
-                ""
+    case foundAlias of
+        Nothing ->
+            ""
 
-            Just val ->
-                val.aliasName
+        Just val ->
+            val.aliasName
 
 
 groupDeploymentList : List Deployment -> List (List Deployment)
 groupDeploymentList deployments =
-    (List.Extra.groupWhile (\x y -> x.name == y.name) deployments)
+    List.Extra.groupWhile (\x y -> x.name == y.name) deployments
 
 
 filterDeploymentList : String -> List Deployment -> List (List Deployment)
@@ -269,14 +281,14 @@ filterDeploymentList selectedAlias groupedDeployments =
                 deployment =
                     List.head deployments
             in
-                case deployment of
-                    Nothing ->
-                        False
+            case deployment of
+                Nothing ->
+                    False
 
-                    Just val ->
-                        if val.name == selectedAlias then
-                            True
-                        else
-                            False
+                Just val ->
+                    if val.name == selectedAlias then
+                        True
+                    else
+                        False
         )
         (groupDeploymentList groupedDeployments)

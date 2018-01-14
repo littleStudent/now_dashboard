@@ -1,9 +1,5 @@
 $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import '~bootstrap/scss/_mixins.scss';
-@import '~bootstrap/scss/_variables.scss';
-@import '~bootstrap/scss/_grid.scss';
-@import '~bootstrap/scss/_tables.scss';
-@import '~bootstrap/scss/_normalize.scss';
 @import '~bootstrap/scss/bootstrap.scss';
 
 @import './shared/fonts.scss';
@@ -18,40 +14,38 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import './partials/quickjump';
 @import './partials/spinner';
 
-
-
 body {
-    font-family: $base_font_family;
-    text-rendering: geometricPrecision;
-    @media screen and (max-width: $break-large) {
-        font-size: $mobile_base_font_size;
-    }
-    @media screen and (min-width: $break-large) {
-        font-size: $base_font_size;
-    }
-    font-weight: normal;
-    background-color: $background_color;
-    color: $primary_color;
+  font-family: $base_font_family;
+  text-rendering: geometricPrecision;
+  @media screen and (max-width: $break-large) {
+    font-size: $mobile_base_font_size;
+  }
+  @media screen and (min-width: $break-large) {
+    font-size: $base_font_size;
+  }
+  font-weight: normal;
+  background-color: $background_color;
+  color: $primary_color;
 }
 
 ul {
-    list-style: none;
-    padding-left: 0;
+  list-style: none;
+  padding-left: 0;
 }
 
 th {
-    font-weight: normal;
+  font-weight: normal;
 }
 
 button {
-    background:none;
-    border:none;
-    margin:0;
-    padding:0;
-    color: $primary_color;
-    outline: none;
-    text-rendering: geometricPrecision;
-    font-family: $base_font_family;
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  color: $primary_color;
+  outline: none;
+  text-rendering: geometricPrecision;
+  font-family: $base_font_family;
 }
 
 button:focus {
@@ -60,17 +54,17 @@ button:focus {
 }
 
 button:hover {
-    text-decoration: none;
-    border-style: solid;
-    border: 0px;
-    border-bottom: 1px solid $contrast_color;        
-    cursor: pointer;
+  text-decoration: none;
+  border-style: solid;
+  border: 0px;
+  border-bottom: 1px solid $contrast_color;
+  cursor: pointer;
 }
 
 td {
-    word-wrap: break-word
+  word-wrap: break-word;
 }
 
 .content-container {
-    margin-top:10px;
+  margin-top: 10px;
 }

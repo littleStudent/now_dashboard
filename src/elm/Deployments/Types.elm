@@ -48,8 +48,17 @@ type alias Deployment =
     { uid : String
     , name : String
     , url : String
-    , created : String
+    , created : Int
+    , scale : Maybe Scale
     , state : Maybe String
+    }
+
+
+type alias Scale =
+    { min : Int
+    , max : Int
+    , auto : Maybe Bool
+    , current : Maybe Int
     }
 
 

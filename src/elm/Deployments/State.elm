@@ -1,11 +1,11 @@
 module Deployments.State exposing (..)
 
-import Deployments.Messages exposing (..)
-import Deployments.Types exposing (Deployment, DeploymentState, Model, SetAliasResponse, DeploymentRequest)
-import Deployments.Autocomplete
 import Aliases.Types exposing (Alias)
-import Deployments.Rest exposing (fetchDeployments, fetchDeployment, deleteDeployment, setAliasForDeployment, pingDeployments)
 import Array
+import Deployments.Autocomplete
+import Deployments.Messages exposing (..)
+import Deployments.Rest exposing (deleteDeployment, fetchDeployment, fetchDeployments, pingDeployments, setAliasForDeployment)
+import Deployments.Types exposing (Deployment, DeploymentRequest, DeploymentState, Model, SetAliasResponse)
 import Dict
 import List
 import Navigation
@@ -23,7 +23,7 @@ update msg model =
         Fetch_Deployments_Response (Ok receiveDeployments) ->
             ( { model
                 | deployments = receiveDeployments
-                , requests = (Dict.fromList (List.map (updateInProgress model.requests) (List.map .uid (List.filter (\deployment -> deployment.name == model.selectedAliasName) receiveDeployments))))
+                , requests = Dict.fromList (List.map (updateInProgress model.requests) (List.map .uid (List.filter (\deployment -> deployment.name == model.selectedAliasName) receiveDeployments)))
               }
             , Cmd.batch (List.map (fetchDeployment model.token) (List.filter (\deployment -> deployment.name == model.selectedAliasName) receiveDeployments))
             )
@@ -75,21 +75,21 @@ update msg model =
                 deploymentArray =
                     Array.fromList model.deployments
             in
-                case index of
-                    Nothing ->
-                        ( { model | deployments = model.deployments }, Cmd.none )
+            case index of
+                Nothing ->
+                    ( { model | deployments = model.deployments }, Cmd.none )
 
-                    Just val ->
-                        ( { model
-                            | deployments = (removeFromList val model.deployments)
-                            , requests =
-                                Dict.insert deploymentId
-                                    { inProgressCount = decrementProgressCount deploymentId model.requests
-                                    }
-                                    model.requests
-                          }
-                        , Cmd.none
-                        )
+                Just val ->
+                    ( { model
+                        | deployments = removeFromList val model.deployments
+                        , requests =
+                            Dict.insert deploymentId
+                                { inProgressCount = decrementProgressCount deploymentId model.requests
+                                }
+                                model.requests
+                      }
+                    , Cmd.none
+                    )
 
         Delete_Deployment_Response deploymentId _ ->
             ( { model
@@ -108,25 +108,25 @@ update msg model =
                 foundAutcompleteMode =
                     Dict.get deploymentId model.autocompleteMode
             in
-                case foundAutcompleteMode of
-                    Nothing ->
-                        ( model, Cmd.none )
+            case foundAutcompleteMode of
+                Nothing ->
+                    ( model, Cmd.none )
 
-                    Just val ->
-                        case val.selectedAliasName of
-                            Nothing ->
-                                ( model, Cmd.none )
+                Just val ->
+                    case val.selectedAliasName of
+                        Nothing ->
+                            ( model, Cmd.none )
 
-                            Just val2 ->
-                                ( { model
-                                    | requests =
-                                        Dict.insert deploymentId
-                                            { inProgressCount = incrementProgressCount deploymentId model.requests
-                                            }
-                                            model.requests
-                                  }
-                                , setAliasForDeployment model.token val2 deploymentId
-                                )
+                        Just val2 ->
+                            ( { model
+                                | requests =
+                                    Dict.insert deploymentId
+                                        { inProgressCount = incrementProgressCount deploymentId model.requests
+                                        }
+                                        model.requests
+                              }
+                            , setAliasForDeployment model.token val2 deploymentId
+                            )
 
         Set_Alias_Response deploymentId (Ok setAliasResponse) ->
             ( { model
@@ -156,19 +156,19 @@ update msg model =
         Start_Editing_Deployment deploymentId ->
             let
                 editMode =
-                    (Dict.get deploymentId model.editMode)
+                    Dict.get deploymentId model.editMode
             in
-                case editMode of
-                    Nothing ->
-                        ( { model
-                            | editMode = Dict.insert deploymentId { aliasName = "", errorMessage = "", successMessage = "" } model.editMode
-                            , autocompleteMode = Dict.insert deploymentId Deployments.Autocomplete.initialModel model.autocompleteMode
-                          }
-                        , Cmd.none
-                        )
+            case editMode of
+                Nothing ->
+                    ( { model
+                        | editMode = Dict.insert deploymentId { aliasName = "", errorMessage = "", successMessage = "" } model.editMode
+                        , autocompleteMode = Dict.insert deploymentId Deployments.Autocomplete.initialModel model.autocompleteMode
+                      }
+                    , Cmd.none
+                    )
 
-                    Just val ->
-                        ( { model | editMode = Dict.insert deploymentId { val | aliasName = "" } model.editMode }, Cmd.none )
+                Just val ->
+                    ( { model | editMode = Dict.insert deploymentId { val | aliasName = "" } model.editMode }, Cmd.none )
 
         End_Editing_Deployment deploymentId ->
             ( { model | editMode = Dict.remove deploymentId model.editMode }, Cmd.none )
@@ -176,14 +176,14 @@ update msg model =
         Input_New_Alias_Name deploymentId aliasName ->
             let
                 editMode =
-                    (Dict.get deploymentId model.editMode)
+                    Dict.get deploymentId model.editMode
             in
-                case editMode of
-                    Nothing ->
-                        ( model, Cmd.none )
+            case editMode of
+                Nothing ->
+                    ( model, Cmd.none )
 
-                    Just val ->
-                        ( { model | editMode = Dict.insert deploymentId { val | aliasName = aliasName } model.editMode }, Cmd.none )
+                Just val ->
+                    ( { model | editMode = Dict.insert deploymentId { val | aliasName = aliasName } model.editMode }, Cmd.none )
 
         Select_Alias aliasName ->
             ( { model | selectedAliasName = aliasName }
@@ -232,21 +232,21 @@ update msg model =
                 newAutocompletes =
                     Dict.insert deployment.uid updatedAutocomplete model.autocompleteMode
             in
-                ( { model
-                    | autocompleteMode = newAutocompletes
-                  }
-                , Cmd.map (AutocompleteMsg updatedAutocomplete deployment) cmd
-                )
+            ( { model
+                | autocompleteMode = newAutocompletes
+              }
+            , Cmd.map (AutocompleteMsg updatedAutocomplete deployment) cmd
+            )
 
 
 incrementProgressCount : String -> Dict.Dict String DeploymentRequest -> Int
 incrementProgressCount deploymentId requests =
-    (getProgressCount deploymentId requests) + 1
+    getProgressCount deploymentId requests + 1
 
 
 decrementProgressCount : String -> Dict.Dict String DeploymentRequest -> Int
 decrementProgressCount deploymentId requests =
-    (getProgressCount deploymentId requests) - 1
+    getProgressCount deploymentId requests - 1
 
 
 getProgressCount : String -> Dict.Dict String DeploymentRequest -> Int
@@ -255,12 +255,12 @@ getProgressCount deploymentId requests =
         request =
             Dict.get deploymentId requests
     in
-        case request of
-            Nothing ->
-                0
+    case request of
+        Nothing ->
+            0
 
-            Just val ->
-                val.inProgressCount
+        Just val ->
+            val.inProgressCount
 
 
 updateDeployment : List Deployment -> Deployment -> List Deployment
@@ -272,7 +272,7 @@ updateDeployment list deployment =
             else
                 depl
     in
-        List.map updateFn list
+    List.map updateFn list
 
 
 updateInProgress : Dict.Dict String DeploymentRequest -> String -> ( String, DeploymentRequest )
@@ -298,7 +298,7 @@ setDeploymentAtUID newDeployment oldDeployment =
 
 removeFromList : Int -> List Deployment -> List Deployment
 removeFromList i xs =
-    (List.take i xs) ++ (List.drop (i + 1) xs)
+    List.take i xs ++ List.drop (i + 1) xs
 
 
 indicesOf : DeploymentState -> List Deployment -> Maybe Int

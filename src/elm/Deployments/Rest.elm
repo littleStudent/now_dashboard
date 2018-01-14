@@ -1,11 +1,11 @@
 module Deployments.Rest exposing (..)
 
-import HttpBuilder exposing (..)
-import Http exposing (..)
-import Json.Decode as Decode exposing (Decoder, list, string, field, decodeString, at)
-import Json.Encode as Encode exposing (..)
 import Deployments.Messages exposing (..)
-import Deployments.Types exposing (Deployment, DeploymentState, SetAliasResponse)
+import Deployments.Types exposing (Deployment, DeploymentState, Scale, SetAliasResponse)
+import Http exposing (..)
+import HttpBuilder exposing (..)
+import Json.Decode as Decode exposing (Decoder, at, decodeString, field, list, string)
+import Json.Encode as Encode exposing (..)
 
 
 -- HTTP
@@ -70,12 +70,22 @@ deploymentDecoder =
 
 memberDecoder : Decode.Decoder Deployment
 memberDecoder =
-    Decode.map5 Deployment
+    Decode.map6 Deployment
         (Decode.field "uid" Decode.string)
         (Decode.field "name" Decode.string)
         (Decode.field "url" Decode.string)
-        (Decode.field "created" Decode.string)
+        (Decode.field "created" Decode.int)
+        (Decode.maybe (Decode.field "scale" scaleDecoder))
         (Decode.maybe (Decode.field "state" Decode.string))
+
+
+scaleDecoder : Decode.Decoder Scale
+scaleDecoder =
+    Decode.map4 Scale
+        (Decode.field "min" Decode.int)
+        (Decode.field "max" Decode.int)
+        (Decode.maybe (Decode.field "auto" Decode.bool))
+        (Decode.maybe (Decode.field "current" Decode.int))
 
 
 memberDecoder2 : Decode.Decoder DeploymentState

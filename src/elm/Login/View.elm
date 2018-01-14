@@ -37,16 +37,12 @@ update msg model =
             )
 
         Login_Response newToken (Err err) ->
-            let
-                _ =
-                    Debug.log "error" err
-            in
-                ( { model
-                    | errorMessage = "provided token is not authorized"
-                    , inProgress = False
-                  }
-                , Cmd.none
-                )
+            ( { model
+                | errorMessage = "provided token is not authorized"
+                , inProgress = False
+              }
+            , Cmd.none
+            )
 
 
 view : Model -> Html Msg

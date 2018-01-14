@@ -3,94 +3,98 @@
 @import './shared/sizes.scss';
 
 .deployment-content {
-    margin-top: 50px;        
+  margin-top: 50px;
 }
 
 .deployments-section {
-    .deployments-section-title {
-        font-size: $base_font_size;
-        text-align: left;
-        @media screen and (max-width: $break-large) {
-            margin-left: 10px;
-        }
-        @media screen and (min-width: $break-large) {
-            margin-left: 0px;
-        }
+  .deployments-section-title {
+    font-size: $base_font_size;
+    text-align: left;
+    @media screen and (max-width: $break-large) {
+      margin-left: 10px;
     }
-    thead {
-        color: $primary_color;
+    @media screen and (min-width: $break-large) {
+      margin-left: 0px;
     }
-    .deployment-name {
-        margin-bottom: 0;
-    }
-    .deployment-uid {
-        font-size: $base_font_size_small_secondary;
-        color: $secondary_color;
-        margin-bottom: 0;
-    }
-    .deployment-logs {
-        color: $secondary_color;
-        margin-bottom: 0;
-    }
-    a:hover {
-        cursor: pointer;
-        text-decoration: none;
-        border: 0px;
-        border-bottom: 1px solid $contrast_color;
-    }
-    a {
-        color: $primary_color_bold;
-    }
+  }
+  thead {
+    color: $primary_color;
+  }
+  .deployment-name {
+    margin-bottom: 0;
+  }
+  .deployment-uid {
+    font-size: $base_font_size_small_secondary;
+    color: $secondary_color;
+    margin-bottom: 0;
+  }
+  .deployment-date {
+    font-size: $base_font_size_small_secondary;
+    color: $secondary_color;
+    margin-bottom: 0;
+  }
+  .deployment-logs {
+    color: $secondary_color;
+    margin-bottom: 0;
+  }
+  a:hover {
+    cursor: pointer;
+    text-decoration: none;
+    border: 0px;
+    border-bottom: 1px solid $contrast_color;
+  }
+  a {
+    color: $primary_color_bold;
+  }
 
-    .ping-button:hover {
-        border-bottom: 1px solid $blue_color;
-    }
-    .alias-button:hover {
-        border-bottom: 1px solid $primary_color;
-    }
-    .alias-btn {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
+  .ping-button:hover {
+    border-bottom: 1px solid $blue_color;
+  }
+  .alias-button:hover {
+    border-bottom: 1px solid $primary_color;
+  }
+  .alias-btn {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
 
-
 .autocomplete-menu {
-    position: relative;
-    margin-top: 5px;
-    background: white;
-    color: black;
-    border: 1px solid #DDD;
-    border-radius: 3px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    min-width: 120px;
+  position: relative;
+  margin-top: 5px;
+  background: white;
+  color: black;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  min-width: 120px;
 }
 
 .autocomplete-item {
-    display: block;
-    padding: 5px 10px;
-    border-bottom: 1px solid #DDD;
-    cursor: pointer;
+  display: block;
+  padding: 5px 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
 }
 
 .key-selected {
-    background-color: #3366FF;
+  background-color: #3366ff;
 }
 
 .mouse-selected {
-    background-color: #ececec;
+  background-color: #ececec;
 }
 
 .autocomplete-list {
-    list-style: none;
-    padding: 0;
-    margin: auto;
-    max-height: 200px;
-    overflow-y: auto;
-    position: absolute;
-    background-color: $background_color;
-    border: 1px solid #DDD;
-    z-index: 1;
+  list-style: none;
+  padding: 0;
+  margin: auto;
+  max-height: 200px;
+  overflow-y: auto;
+  position: absolute;
+  background-color: $background_color;
+  border: 1px solid #ddd;
+  z-index: 1;
 }
 
 .autocomplete-list-with-sections {
@@ -100,12 +104,12 @@
 }
 
 .autocomplete-input {
-    min-width: 120px;
-    color: black;
-    font-size: 12px;
-    padding: 4px;
-    border-radius: 4px;
-    background-color: white;
+  min-width: 120px;
+  color: black;
+  font-size: 12px;
+  padding: 4px;
+  border-radius: 4px;
+  background-color: white;
 }
 
 .autocomplete-section-list {
