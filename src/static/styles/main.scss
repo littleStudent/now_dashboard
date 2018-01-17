@@ -68,3 +68,16 @@ td {
 .content-container {
   margin-top: 10px;
 }
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 20px;
+  a {
+    text-align: center;
+    width: 100%;
+    display: inline-block;
+    color: black;
+  }
+}

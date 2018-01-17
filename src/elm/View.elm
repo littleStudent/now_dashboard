@@ -1,17 +1,17 @@
 module View exposing (..)
 
+import About.About
+import Aliases.List
+import Deployments.List
+import Deployments.Types exposing (Deployment)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
-import Messages exposing (Msg(..))
-import Types exposing (Model)
-import Deployments.List
-import Deployments.Types exposing (Deployment)
-import Aliases.List
-import Secrets.List
-import About.About
 import Login.View
+import Messages exposing (Msg(..))
 import Routing exposing (Route(..))
+import Secrets.List
+import Types exposing (Model)
 
 
 view : Model -> Html Msg
@@ -19,6 +19,14 @@ view model =
     div []
         [ nav model.route model.login.isLoggedIn
         , div [ class "" ] [ page model ]
+        , footer
+        ]
+
+
+footer : Html Msg
+footer =
+    div [ class "footer" ]
+        [ a [ target "_blank", href "https://github.com/littleStudent/now_dashboard" ] [ text "github.com" ]
         ]
 
 
@@ -31,7 +39,7 @@ nav route isLoggedIn =
                     [ span []
                         [ img [ src "" ] []
                         ]
-                    , text ("Nash")
+                    , text "Nash"
                     ]
                 ]
             , if isLoggedIn then
@@ -98,14 +106,14 @@ page model =
                 deployments =
                     model.deployments
             in
-                Html.map DeploymentsMsg
-                    (Deployments.List.view
-                        { deployments
-                            | deployments = (List.sortWith deploymentCompare model.deployments.deployments)
-                            , aliases = model.aliases.aliases
-                            , token = model.login.token
-                        }
-                    )
+            Html.map DeploymentsMsg
+                (Deployments.List.view
+                    { deployments
+                        | deployments = List.sortWith deploymentCompare model.deployments.deployments
+                        , aliases = model.aliases.aliases
+                        , token = model.login.token
+                    }
+                )
 
         AliasesRoute ->
             Html.map AliasesMsg (Aliases.List.view model.aliases)
