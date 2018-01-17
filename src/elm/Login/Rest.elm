@@ -1,41 +1,40 @@
 module Login.Rest exposing (..)
 
-import HttpBuilder exposing (..)
 import Http exposing (..)
-import Json.Decode as Decode exposing (Decoder, list, string, field, decodeString, at)
+import HttpBuilder exposing (..)
+import Json.Decode as Decode exposing (Decoder, at, decodeString, field, list, string)
+import Json.Encode as Encode exposing (..)
 import Login.Messages exposing (..)
+import Login.Types exposing (RegistrationResponse)
 import Secrets.Types exposing (Secret)
 
 
--- HTTP
-
-
-authenticate : String -> Cmd Msg
-authenticate token =
-    HttpBuilder.get "https://api.zeit.co/now/secrets"
+verify : String -> String -> Cmd Msg
+verify email token =
+    HttpBuilder.get ("https://api.zeit.co/now/registration/verify?email=" ++ email ++ "&token=" ++ token)
         |> withHeader "Accept" "application/json"
-        |> withHeader "Authorization" ("Bearer " ++ token)
-        |> withExpect (Http.expectJson secretsDecoder)
-        |> HttpBuilder.send (Login_Response token)
+        |> withExpect (Http.expectJson (Decode.field "token" Decode.string))
+        |> HttpBuilder.send Verification_Response
+
+
+registration : String -> Cmd Msg
+registration email =
+    HttpBuilder.post "https://api.zeit.co/now/registration"
+        |> withJsonBody
+            (Encode.object
+                [ ( "email", Encode.string email ), ( "tokenName", Encode.string "nash.now.sh" ) ]
+            )
+        |> withHeader "Accept" "application/json"
+        |> withExpect (Http.expectJson registrationDecoder)
+        |> HttpBuilder.send Registration_Response
 
 
 
 -- DECODERS
 
 
-secretsDecoder : Decode.Decoder (List Secret)
-secretsDecoder =
-    Decode.field "secrets" secretDecoder
-
-
-secretDecoder : Decode.Decoder (List Secret)
-secretDecoder =
-    Decode.list memberDecoder
-
-
-memberDecoder : Decode.Decoder Secret
-memberDecoder =
-    Decode.map3 Secret
-        (Decode.field "uid" Decode.string)
-        (Decode.field "name" Decode.string)
-        (Decode.field "created" Decode.string)
+registrationDecoder : Decode.Decoder RegistrationResponse
+registrationDecoder =
+    Decode.map2 RegistrationResponse
+        (Decode.field "token" Decode.string)
+        (Decode.field "securityCode" Decode.string)

@@ -1,10 +1,10 @@
 module Types exposing (..)
 
-import Deployments.Types
 import Aliases.Types
-import Secrets.Types exposing (Secret)
+import Deployments.Types
 import Login.Types
 import Routing
+import Secrets.Types exposing (Secret)
 
 
 type alias Model =
@@ -26,6 +26,9 @@ initialModel route =
             , route = route
             , login =
                 { token = ""
+                , registrationToken = ""
+                , securityCode = ""
+                , email = ""
                 , isLoggedIn = False
                 , errorMessage = ""
                 , inProgress = False
@@ -39,6 +42,9 @@ initialModel route =
             , route = route
             , login =
                 { token = ""
+                , registrationToken = ""
+                , securityCode = ""
+                , email = ""
                 , isLoggedIn = False
                 , errorMessage = ""
                 , inProgress = False

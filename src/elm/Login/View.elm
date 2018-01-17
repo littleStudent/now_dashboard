@@ -1,14 +1,16 @@
 module Login.View exposing (..)
 
+import Delay exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
-import String
-import Navigation
-import Login.Rest exposing (authenticate)
-import Login.Types exposing (..)
 import Login.Messages exposing (..)
+import Login.Rest exposing (registration, verify)
+import Login.Types exposing (..)
+import Navigation
 import Ports exposing (..)
+import String
+import Time
 
 
 -- login component
@@ -17,63 +19,67 @@ import Ports exposing (..)
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Set_Token newToken ->
-            ( { model | token = newToken, errorMessage = "" }
+        Set_Email newToken ->
+            ( { model | email = newToken, errorMessage = "" }
             , Cmd.none
             )
 
-        Login_Request ->
+        Registration_Request ->
             ( { model | inProgress = True }
-            , authenticate model.token
+            , registration model.email
             )
 
-        Login_Response newToken (Ok _) ->
+        Registration_Response (Ok result) ->
             ( { model
-                | isLoggedIn = True
-                , token = newToken
-                , inProgress = False
+                | registrationToken = result.token
+                , securityCode = result.securityCode
               }
-            , Cmd.batch [ Navigation.newUrl "/deployments", setToken newToken ]
+            , verify model.email result.token
             )
 
-        Login_Response newToken (Err err) ->
+        Registration_Response (Err err) ->
             ( { model
-                | errorMessage = "provided token is not authorized"
+                | errorMessage = "Invalid email"
                 , inProgress = False
               }
             , Cmd.none
+            )
+
+        Verification_Request ->
+            ( model
+            , verify model.email model.registrationToken
+            )
+
+        Verification_Response (Ok token) ->
+            ( { model
+                | token = token
+                , isLoggedIn = True
+                , inProgress = False
+              }
+            , Cmd.batch [ Navigation.newUrl "/deployments", setToken token ]
+            )
+
+        Verification_Response (Err err) ->
+            ( model
+            , after 2000 Time.millisecond Verification_Request
             )
 
 
 view : Model -> Html Msg
 view model =
     div [ class "container content-container", id "login-container" ]
-        [ input [ class "", type_ "password", placeholder "Enter your now token", onInput Set_Token ] []
-        , div [] [ text "get your token ", a [ href "https://zeit.co/account/tokens", target "_blank" ] [ text "here" ] ]
-        , loginButton (String.isEmpty model.token)
+        [ input [ class "", placeholder "Enter your email", onInput Set_Email ] []
         , spinner model.inProgress
+        , if model.securityCode /= "" then
+            span []
+                [ text "Check your email / Verification Code: "
+                , span [] [ text model.securityCode ]
+                ]
+          else if not model.inProgress then
+            loginButton (String.isEmpty model.email)
+          else
+            text ""
         , errorMessage model.errorMessage
-        , div [ id "faq-container" ]
-            [ p [ style [ ( "font-weight", "bold" ) ] ] [ text "## Description" ]
-            , ul [ style [ ( "list-style-type", "circle" ) ] ]
-                [ li [] [ text "this is a dashboard in which you get a good overview of your deployments" ]
-                , li []
-                    [ text "source code is available on github"
-                    , a [ href "https://github.com/littleStudent/now_dashboard" ] [ text " frontend" ]
-                    ]
-                , li [] [ text "your zeit API token is never stored" ]
-                ]
-            , p [ style [ ( "font-weight", "bold" ) ] ] [ text "## Features" ]
-            , ul [ style [ ( "list-style-type", "circle" ) ] ]
-                [ li [] [ text "list deployments" ]
-                , li [] [ text "delete deployments" ]
-                , li [] [ text "ping deployments to wake them up" ]
-                , li [] [ text "show the aliases for the deployments" ]
-                , li [] [ text "set new aliases with autocompletion" ]
-                , li [] [ text "list aliases" ]
-                , li [] [ text "list secrets" ]
-                ]
-            ]
         ]
 
 
@@ -82,7 +88,7 @@ loginButton isHidden =
     if isHidden then
         text ""
     else
-        button [ class "", onClick Login_Request ] [ text "Login" ]
+        button [ class "", onClick Registration_Request ] [ text "Login" ]
 
 
 errorMessage : String -> Html Msg
