@@ -10,7 +10,7 @@
   },
   "scripts": {
     "server": "webpack-dev-server --hot --inline --content-base src/",
-    "build_locally": "rimraf dist && elm package install && webpack",
+    "build_locally": "rimraf dist && elm package install -y && webpack",
     "watch": "webpack --watch",
     "deploy": "npm run build_locally && now dist/ --public"
   },

@@ -17,6 +17,7 @@ pids
 logs
 results
 build
+TODO
 
 node_modules
 
@@ -28,7 +29,8 @@ node_modules
 .LSOverride
 
 # Icon must ends with two \r.
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -91,7 +93,8 @@ out/
 .LSOverride
 
 # Icon must ends with two \r.
-Icon
+Icon
+
 
 # Thumbnails
 ._*
