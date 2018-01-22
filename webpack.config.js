@@ -125,7 +125,6 @@ if (TARGET_ENV === 'production') {
         },
         {
           from: '_redirects',
-          to: '_redirects',
         },
       ]),
 
